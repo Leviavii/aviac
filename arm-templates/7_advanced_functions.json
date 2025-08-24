@@ -1,0 +1,128 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVaultName": {
+      "type": "string",
+      "defaultValue": "[concat('kv-', uniqueString(resourceGroup().id))]"
+    },
+    "secretValue": {
+      "type": "securestring",
+      "defaultValue": "MySecretPassword123!"
+    },
+    "configData": {
+      "type": "string",
+      "defaultValue": "{\"environment\":\"production\",\"debug\":false}"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "variables": {
+    "tenantId": "[subscription().tenantId]",
+    "subscriptionId": "[subscription().subscriptionId]",
+    "deploymentName": "[deployment().name]",
+    "resourceGroupId": "[resourceGroup().id]",
+    "uniqueGuid": "[guid(resourceGroup().id, deployment().name)]",
+    "encodedSecret": "[base64(parameters('secretValue'))]",
+    "configObject": "[json(parameters('configData'))]",
+    "encodedConfig": "[base64(parameters('configData'))]",
+    "decodedConfig": "[base64ToJson(variables('encodedConfig'))]",
+    "keyVaultUri": "[concat('https://', parameters('keyVaultName'), '.vault.azure.net/')]",
+    "resourceTags": {
+      "DeploymentId": "[variables('uniqueGuid')]",
+      "DeploymentName": "[variables('deploymentName')]",
+      "SubscriptionId": "[variables('subscriptionId')]",
+      "TenantId": "[variables('tenantId')]",
+      "CreatedBy": "ARM Template",
+      "Environment": "[variables('configObject').environment]",
+      "Debug": "[string(variables('configObject').debug)]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[parameters('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('resourceTags')]",
+      "properties": {
+        "tenantId": "[variables('tenantId')]",
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "accessPolicies": [],
+        "enabledForDeployment": false,
+        "enabledForTemplateDeployment": true,
+        "enabledForDiskEncryption": false,
+        "enableSoftDelete": true,
+        "softDeleteRetentionInDays": 90
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[concat(parameters('keyVaultName'), '/mysecret')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[parameters('secretValue')]",
+        "attributes": {
+          "enabled": true
+        }
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[concat(parameters('keyVaultName'), '/config')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[variables('encodedConfig')]",
+        "contentType": "application/json",
+        "attributes": {
+          "enabled": true
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "keyVaultName": {
+      "type": "string",
+      "value": "[parameters('keyVaultName')]"
+    },
+    "keyVaultUri": {
+      "type": "string",
+      "value": "[variables('keyVaultUri')]"
+    },
+    "deploymentGuid": {
+      "type": "string",
+      "value": "[variables('uniqueGuid')]"
+    },
+    "tenantId": {
+      "type": "string",
+      "value": "[variables('tenantId')]"
+    },
+    "subscriptionInfo": {
+      "type": "object",
+      "value": {
+        "subscriptionId": "[variables('subscriptionId')]",
+        "resourceGroupName": "[resourceGroup().name]",
+        "resourceGroupLocation": "[resourceGroup().location]"
+      }
+    },
+    "configurationData": {
+      "type": "object",
+      "value": "[variables('decodedConfig')]"
+    },
+    "hasProductionConfig": {
+      "type": "bool",
+      "value": "[equals(variables('configObject').environment, 'production')]"
+    }
+  }
+}

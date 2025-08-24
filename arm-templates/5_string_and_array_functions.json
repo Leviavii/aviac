@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "applicationName": {
+      "type": "string",
+      "defaultValue": "MyApp-Production-v1.0"
+    },
+    "tagsList": {
+      "type": "array",
+      "defaultValue": ["Environment:Prod", "Team:DevOps", "Project:WebApp"]
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "currentDate": {
+      "type": "string",
+      "defaultValue": "[utcNow('yyyy-MM-dd')]"
+    }
+  },
+  "variables": {
+    "appNameParts": "[split(parameters('applicationName'), '-')]",
+    "cleanAppName": "[replace(toLower(variables('appNameParts')[0]), ' ', '')]",
+    "versionNumber": "[substring(variables('appNameParts')[2], 1, length(variables('appNameParts')[2]))]",
+    "storageNameBase": "[concat(variables('cleanAppName'), 'storage')]",
+    "storageAccountName": "[take(concat(variables('storageNameBase'), uniqueString(resourceGroup().id)), 24)]",
+    "tagsObject": {
+      "Application": "[variables('cleanAppName')]",
+      "Version": "[variables('versionNumber')]",
+      "CreatedDate": "[parameters('currentDate')]",
+      "ResourceCount": "[string(length(variables('appNameParts')))]"
+    },
+    "combinedTags": "[union(variables('tagsObject'), createObject('Environment', if(contains(parameters('applicationName'), 'Prod'), 'Production', 'Development')))]",
+    "hasMultipleParts": "[greater(length(variables('appNameParts')), 2)]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-04-01",
+      "name": "[variables('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('combinedTags')]",
+      "sku": {
+        "name": "[if(variables('hasMultipleParts'), 'Standard_GRS', 'Standard_LRS')]"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "accessTier": "Hot",
+        "supportsHttpsTrafficOnly": true
+      }
+    }
+  ],
+  "outputs": {
+    "parsedAppName": {
+      "type": "string",
+      "value": "[variables('cleanAppName')]"
+    },
+    "appNameLength": {
+      "type": "int",
+      "value": "[length(variables('cleanAppName'))]"
+    },
+    "versionInfo": {
+      "type": "string",
+      "value": "[variables('versionNumber')]"
+    },
+    "isProduction": {
+      "type": "bool",
+      "value": "[contains(parameters('applicationName'), 'Prod')]"
+    },
+    "combinedTags": {
+      "type": "object",
+      "value": "[variables('combinedTags')]"
+    }
+  }
+}
