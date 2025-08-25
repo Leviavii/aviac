@@ -1,55 +1,55 @@
-# Aviac - Infrastructure as Code Templates and Documentation
+# Aviac - Rego Rule Validation Templates
 
-This repository contains a comprehensive collection of ARM templates, Bicep templates, and parser documentation.
+This repository contains intentionally misconfigured Bicep templates designed to validate the ARM→Rego scanning pipeline.
+
+## Purpose
+These templates create Azure resources with specific security misconfigurations that should trigger corresponding rego rules in the Wiz scanning system. If findings appear in the Wiz portal, it confirms the entire pipeline is working:
+
+1. ✅ Bicep templates compile to ARM correctly
+2. ✅ Rego rules scan ARM templates successfully  
+3. ✅ Security findings are reported to Wiz portal
+
+## Test Rules
+
+### 🔴 AppService-010 - App Service Authentication
+**Intentional Failure**: Web App deployed without `authsettings` configuration
+- **Expected Finding**: "App Service Authentication properties are not defined"
+- **Rego Check**: Missing `Microsoft.Web/sites/config` with name "authsettings"
+
+### 🔴 DatabaseServer-001 - Redis Public Network Access  
+**Intentional Failure**: Redis Cache with `publicNetworkAccess: 'Enabled'`
+- **Expected Finding**: "publicNetworkAccess should be set to 'Disabled'"
+- **Rego Check**: `Microsoft.Cache/redis` with public access enabled
+
+### 🔴 StorageAccount-013 - Blob Container Public Access
+**Intentional Failure**: Blob container with `publicAccess: 'Container'`  
+- **Expected Finding**: "publicAccess should be set to 'None'"
+- **Rego Check**: `Microsoft.Storage/.../containers` with public access enabled
 
 ## Repository Structure
 
 ```
-📁 arm-templates/          # Azure Resource Manager JSON templates
-📁 bicep-templates/        # Bicep template files  
-📁 multi-file-bicep/       # Complex multi-file Bicep scenarios
-📁 documentation/          # Parser guides and documentation
-📁 examples/               # Example usage and README files
+AppService-010/
+├── main.bicep                    # Main deployment
+├── modules/webapp.bicep          # Web App (missing authsettings)
+├── main.bicepparam              # Parameters  
+└── README.md                     # Detailed explanation
+
+DatabaseServer-001/
+├── main.bicep                    # Main deployment
+├── modules/redis.bicep           # Redis (public access enabled)
+├── main.bicepparam              # Parameters
+└── README.md                     # Detailed explanation
+
+StorageAccount-013/  
+├── main.bicep                    # Main deployment
+├── modules/storage.bicep         # Storage account
+├── modules/container.bicep       # Container (public access enabled)
+├── main.bicepparam              # Parameters
+└── README.md                     # Detailed explanation
 ```
 
-## ARM Templates (`arm-templates/`)
+## Usage
+Deploy any of these templates to your Azure environment. The resulting ARM templates will contain the specific misconfigurations that should trigger the corresponding rego rules.
 
-Collection of ARM templates covering:
-- Simple storage accounts
-- Web applications with parameters
-- Function transformations
-- Complex multi-tier architectures
-- String and array functions
-- Loops and math functions
-- Advanced functions and conditions
-- Networking and VM configurations
-
-## Bicep Templates (`bicep-templates/`)
-
-Paired Bicep templates that represent the same infrastructure as the ARM templates:
-- Simplified syntax
-- Type safety
-- Modular design
-- Better readability
-
-## Multi-File Bicep Scenarios (`multi-file-bicep/`)
-
-Complex Bicep deployments with multiple files:
-- **main_orchestration/**: Main deployment with separate modules
-- **nested_deployment/**: Nested deployment patterns
-- **guid_scenario/**: GUID generation scenarios
-- **generic_module/**: Reusable module patterns
-
-## Documentation (`documentation/`)
-
-- **ARM_Parser_Documentation.md**: Complete ARM template parser guide
-- **ARM_Parser_Examples_Index.md**: Index of all parser examples
-- **README.md**: General documentation overview
-
-## Examples (`examples/`)
-
-Usage examples and additional documentation for understanding the template structure and parser behavior.
-
----
-
-*This repository serves as a comprehensive resource for Infrastructure as Code development and parsing documentation.*
+**⚠️ Warning**: These templates create intentionally insecure configurations for testing purposes only. Do not use in production environments.
