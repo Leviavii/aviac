@@ -5,7 +5,7 @@ param redisName string = 'redis-test-${uniqueString(resourceGroup().id)}'
 param enablePublicAccess bool = true  // This will cause the failure!
 
 // Deploy Redis module - This will intentionally enable public network access
-module redisModule 'modules/redis.bicep' = {
+module redisModule 'redis.bicep' = {
   name: 'redisDeployment'
   params: {
     redisName: redisName
