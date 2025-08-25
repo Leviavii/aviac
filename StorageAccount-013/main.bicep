@@ -6,7 +6,7 @@ param containerName string = 'public-container'
 param containerPublicAccess string = 'Container'  // This will cause the failure!
 
 // Deploy Storage Account
-module storageModule 'modules/storage.bicep' = {
+module storageModule 'storage.bicep' = {
   name: 'storageDeployment'
   params: {
     storageAccountName: storageAccountName
@@ -15,7 +15,7 @@ module storageModule 'modules/storage.bicep' = {
 }
 
 // Deploy Container module - This will intentionally set public access to 'Container'
-module containerModule 'modules/container.bicep' = {
+module containerModule 'container.bicep' = {
   name: 'containerDeployment'
   params: {
     storageAccountName: storageAccountName

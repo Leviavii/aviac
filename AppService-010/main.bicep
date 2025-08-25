@@ -18,7 +18,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 }
 
 // Deploy Web App module - This will intentionally NOT include authsettings
-module webAppModule 'modules/webapp.bicep' = {
+module webAppModule 'webapp.bicep' = {
   name: 'webAppDeployment'
   params: {
     webAppName: webAppName
