@@ -8,7 +8,7 @@ resource "aws_redshift_cluster" "redshift002_public" {
   database_name       = "redshift002db"
   master_username     = "admin"
   master_password     = "Mustbe8Characters!"
-  node_type           = "dc2.large"
+  node_type           = "ra3.xlplus"
   cluster_type        = "single-node"
   skip_final_snapshot = true
   # MISCONFIGURATION: publicly accessible

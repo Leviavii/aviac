@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "iam185_overly_permissive" {
       type        = "*"
       identifiers = ["*"]
     }
-    actions   = ["*"]
+    actions   = ["sqs:*"]
     resources = ["*"]
   }
 }

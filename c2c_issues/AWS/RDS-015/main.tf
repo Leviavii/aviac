@@ -8,10 +8,10 @@ resource "aws_db_instance" "rds015_vulnerable_pg" {
   db_name              = "rds015db"
   engine               = "postgres"
   # MISCONFIGURATION: vulnerable PostgreSQL version
-  engine_version       = "14.6"
+  engine_version       = "14.18"
   instance_class       = "db.t3.micro"
   identifier           = "rds015-vuln-pg-instance"
-  username             = "admin"
+  username             = "wizadmin"
   password             = "foobarbaz123"
   skip_final_snapshot  = true
   db_subnet_group_name = var.db_subnet_group_name

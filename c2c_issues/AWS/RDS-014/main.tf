@@ -8,7 +8,7 @@ resource "aws_rds_cluster" "rds014_vulnerable_cluster" {
   engine                  = "aurora-postgresql"
   # MISCONFIGURATION: vulnerable PostgreSQL version
   engine_version          = "14.6"
-  master_username         = "admin"
+  master_username         = "wizadmin"
   master_password         = "mustbeeightchars"
   skip_final_snapshot     = true
 

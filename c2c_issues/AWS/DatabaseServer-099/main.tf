@@ -36,7 +36,7 @@ resource "aws_timestreaminfluxdb_db_instance" "dbserver099_public_influx" {
   allocated_storage      = 20
   bucket                 = "wiz-test-bucket"
   db_instance_type       = "db.influx.medium"
-  password               = "SecurePassword123!"
+  password               = "SecurePassword123"
   organization           = "wiz-org"
   username               = "admin"
   vpc_security_group_ids = [aws_security_group.dbserver099_sg.id]

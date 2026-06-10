@@ -8,7 +8,7 @@ resource "aws_redshift_cluster" "redshift001_unencrypted" {
   database_name      = "redshift001db"
   master_username    = "admin"
   master_password    = "Mustbe8Characters!"
-  node_type          = "dc2.large"
+  node_type          = "ra3.xlplus"
   cluster_type       = "single-node"
   # MISCONFIGURATION: cluster not encrypted
   encrypted          = false

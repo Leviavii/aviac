@@ -4,8 +4,8 @@
 resource "aws_lightsail_instance" "vm034_rdp_open" {
   name              = "vm034-rdp-open"
   availability_zone = "us-east-2a"
-  blueprint_id      = "windows_2019"
-  bundle_id         = "micro_3_0"
+  blueprint_id      = "windows_server_2022"
+  bundle_id         = "micro_win_3_0"
 
   tags = {
     Project = "wiz-policy-testing"

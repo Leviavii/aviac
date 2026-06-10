@@ -3,6 +3,29 @@
 
 variable "subnet_public_a_id" {}
 
+resource "tls_private_key" "elb002_key" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "tls_self_signed_cert" "elb002_cert" {
+  private_key_pem = tls_private_key.elb002_key.private_key_pem
+  subject {
+    common_name = "elb002.wiz-policy-testing.local"
+  }
+  validity_period_hours = 8760
+  allowed_uses          = ["server_auth"]
+}
+
+resource "aws_acm_certificate" "elb002_cert" {
+  private_key      = tls_private_key.elb002_key.private_key_pem
+  certificate_body = tls_self_signed_cert.elb002_cert.cert_pem
+
+  tags = {
+    Project = "wiz-policy-testing"
+  }
+}
+
 resource "aws_elb" "elb002_insecure_ssl" {
   name    = "elb002-insecure-ssl"
   subnets = [var.subnet_public_a_id]
@@ -12,7 +35,7 @@ resource "aws_elb" "elb002_insecure_ssl" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-east-2:000000000000:certificate/placeholder"
+    ssl_certificate_id = aws_acm_certificate.elb002_cert.arn
   }
 
   tags = {
@@ -32,7 +55,6 @@ resource "aws_load_balancer_policy" "elb002_insecure_ssl_policy" {
     value = "true"
   }
 
-  # Insecure cipher
   policy_attribute {
     name  = "TLS_RSA_ARCFOUR_128_SHA1"
     value = "true"
