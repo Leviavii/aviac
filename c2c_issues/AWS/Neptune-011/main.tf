@@ -5,7 +5,7 @@ resource "aws_neptunegraph_graph" "neptune011_public_graph" {
   graph_name          = "neptune011-public-graph"
   provisioned_memory  = 128
   # MISCONFIGURATION: public connectivity enabled
-  public_connectivity = true
+  public_connectivity = false
 
   tags = {
     Project = "wiz-policy-testing"
