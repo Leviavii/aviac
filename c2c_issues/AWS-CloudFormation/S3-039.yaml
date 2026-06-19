@@ -1,0 +1,19 @@
+# S3-039 — S3 bucket BlockPublicPolicy is not set or false — based on cspm/builtinRules/S3-039/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-039: S3 bucket with BlockPublicPolicy set to false'
+
+Resources:
+  S3039Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-039-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-039

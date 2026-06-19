@@ -1,0 +1,28 @@
+# Firewall-006 — SG allows unrestricted HTTPS access (tcp/443) from 0.0.0.0/0 — based on cspm/builtinRules/Firewall-006/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — Firewall-006: SG allows unrestricted HTTPS access (tcp/443) from 0.0.0.0/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cFirewall006:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted HTTPS access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted HTTPS access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: Firewall-006
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-Firewall-006'

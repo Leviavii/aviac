@@ -1,0 +1,19 @@
+# S3-038 — S3 bucket IgnorePublicAcls is not set or false — based on cspm/builtinRules/S3-038/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-038: S3 bucket with IgnorePublicAcls set to false'
+
+Resources:
+  S3038Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-038-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: true
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-038

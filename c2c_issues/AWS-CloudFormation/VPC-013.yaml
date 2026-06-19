@@ -1,0 +1,35 @@
+# VPC-013 — Default SG with unrestricted traffic (GroupName: default) — based on cspm/builtinRules/VPC-013/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — VPC-013: Default security group with unrestricted SSH traffic'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC013:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: default
+      GroupDescription: !Sub '${AWS::StackName} - Default SG with unrestricted traffic'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted SSH access
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted SSH egress
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-013
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-VPC-013'

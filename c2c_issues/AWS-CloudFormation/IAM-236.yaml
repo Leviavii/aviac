@@ -1,0 +1,23 @@
+# IAM-236 — Bedrock service role missing confused-deputy protection condition — based on cspm/builtinRules/IAM-236 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: IAM-236 - IAM role trusting Bedrock service without aws:SourceAccount/SourceArn condition (non-compliant)
+
+Resources:
+  BedrockRoleWithoutCondition:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-bedrock-role-no-condition'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: bedrock.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/ReadOnlyAccess'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: IAM-236

@@ -1,0 +1,24 @@
+# EC2-011 — EC2 instance with public IP via NetworkInterfaces — based on cspm/builtinRules/EC2-011 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: EC2-011 - EC2 instance with AssociatePublicIpAddress set to true (non-compliant)
+
+Parameters:
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: Select a subnet for the instance
+
+Resources:
+  InstanceWithPublicIp:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
+      InstanceType: t3.micro
+      NetworkInterfaces:
+        - DeviceIndex: 0
+          SubnetId: !Ref SubnetId
+          AssociatePublicIpAddress: true
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: EC2-011

@@ -1,0 +1,25 @@
+# S3-011 — S3 bucket should not be publicly exposed to the internet — based on cspm/builtinRules/S3-011/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-011: S3 bucket with AccessControl PublicReadWrite (triggers public exposure)'
+
+Resources:
+  S3011Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-011-${AWS::AccountId}'
+      AccessControl: PublicReadWrite
+      # OwnershipControls re-enables ACLs (disabled by default since 2023) so AccessControl deploys.
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      # Bucket-level BPA off so the public ACL is actually applied (account-level BPA may still override).
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-011

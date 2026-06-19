@@ -1,0 +1,49 @@
+# CICDService-005 — CodeBuild project with sensitive env vars in plaintext — based on cspm/builtinRules/CICDService-005 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CICDService-005 - CodeBuild project with AWS credentials in plaintext (non-compliant)
+
+Resources:
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-codebuild-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/CloudWatchLogsFullAccess'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: CICDService-005
+
+  CodeBuildProjectWithPlaintextSecrets:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub '${AWS::StackName}-plaintext-secrets'
+      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+      Source:
+        Type: NO_SOURCE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+        EnvironmentVariables:
+          - Name: AWS_ACCESS_KEY_ID
+            Value: AKIAIOSFODNN7EXAMPLE
+            Type: PLAINTEXT
+          - Name: AWS_SECRET_ACCESS_KEY
+            Value: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+            Type: PLAINTEXT
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: CICDService-005

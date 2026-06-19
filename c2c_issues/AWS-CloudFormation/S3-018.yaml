@@ -1,0 +1,25 @@
+# S3-018 — S3 bucket policy allows list action from all principals — based on cspm/builtinRules/S3-018/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-018: S3 bucket policy allows ListObject from all principals without condition'
+
+Resources:
+  S3018Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-018-${AWS::AccountId}'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-018
+
+  S3018BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3018Bucket
+      PolicyDocument:
+        Statement:
+          - Action: ListObject
+            Effect: Allow
+            Resource: !Sub '${S3018Bucket.Arn}/*'
+            Principal: '*'

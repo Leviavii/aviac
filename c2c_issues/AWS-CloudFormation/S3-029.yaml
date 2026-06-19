@@ -1,0 +1,25 @@
+# S3-029 — S3 bucket policy allows all actions from all principals — based on cspm/builtinRules/S3-029/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-029: S3 bucket policy allows all actions (*) from all principals'
+
+Resources:
+  S3029Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-029-${AWS::AccountId}'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-029
+
+  S3029BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3029Bucket
+      PolicyDocument:
+        Statement:
+          - Action: '*'
+            Effect: Allow
+            Resource: !Sub '${S3029Bucket.Arn}/*'
+            Principal: '*'

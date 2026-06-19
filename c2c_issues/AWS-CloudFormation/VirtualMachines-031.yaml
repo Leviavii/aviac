@@ -1,0 +1,25 @@
+# VirtualMachines-031 — Lightsail instance with ports open to 0.0.0.0/0 — based on cspm/builtinRules/VirtualMachines-031 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: VirtualMachines-031 - Lightsail instance allowing all IPv4 on all ports (non-compliant)
+
+Resources:
+  LightsailInstanceAllPorts:
+    Type: AWS::Lightsail::Instance
+    Properties:
+      InstanceName: !Sub '${AWS::StackName}-all-ports-instance'
+      BlueprintId: amazon_linux_2
+      BundleId: nano_3_0
+      AvailabilityZone: !Sub '${AWS::Region}a'
+      Networking:
+        Ports:
+          - FromPort: 0
+            ToPort: 65535
+            Protocol: all
+            AccessDirection: inbound
+            Cidrs:
+              - 0.0.0.0/0
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VirtualMachines-031

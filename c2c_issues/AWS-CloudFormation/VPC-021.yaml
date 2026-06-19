@@ -1,0 +1,48 @@
+# VPC-021 — SG allows unrestricted CIFS access (tcp/445,139 + udp/137,138,445) from 0.0.0.0/0 and ::/0 — based on cspm/builtinRules/VPC-021/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — VPC-021: SG allows unrestricted CIFS access (multiple ports) from 0.0.0.0/0 and ::/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC021:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted CIFS access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 445
+          ToPort: 445
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted CIFS TCP 445
+        - IpProtocol: udp
+          FromPort: 137
+          ToPort: 137
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted CIFS UDP 137
+        - IpProtocol: udp
+          FromPort: 138
+          ToPort: 138
+          CidrIpv6: ::/0
+          Description: Unrestricted CIFS UDP 138 IPv6
+        - IpProtocol: udp
+          FromPort: 445
+          ToPort: 445
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted CIFS UDP 445
+        - IpProtocol: tcp
+          FromPort: 139
+          ToPort: 139
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted CIFS TCP 139
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-021
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-VPC-021'

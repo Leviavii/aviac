@@ -1,0 +1,28 @@
+# VPC-026 — SG allows unrestricted mSQL access (tcp/4333) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-026/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — VPC-026: SG allows unrestricted mSQL access (tcp/4333) from 0.0.0.0/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC026:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted mSQL access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 4333
+          ToPort: 4333
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted mSQL access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-026
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-VPC-026'

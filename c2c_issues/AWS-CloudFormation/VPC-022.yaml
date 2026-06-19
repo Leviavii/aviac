@@ -1,0 +1,28 @@
+# VPC-022 — SG allows unrestricted DNS access (tcp/53) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-022/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — VPC-022: SG allows unrestricted DNS access (tcp/53) from 0.0.0.0/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC022:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted DNS TCP access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 53
+          ToPort: 53
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted DNS TCP access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-022
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-VPC-022'

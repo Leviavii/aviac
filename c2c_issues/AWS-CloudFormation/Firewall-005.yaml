@@ -1,0 +1,28 @@
+# Firewall-005 — SG allows unrestricted HTTP access (tcp/80) from 0.0.0.0/0 — based on cspm/builtinRules/Firewall-005/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — Firewall-005: SG allows unrestricted HTTP access (tcp/80) from 0.0.0.0/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cFirewall005:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted HTTP access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted HTTP access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: Firewall-005
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-Firewall-005'

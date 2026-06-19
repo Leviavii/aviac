@@ -1,0 +1,19 @@
+# S3-037 — S3 bucket BlockPublicAcls is not set or false — based on cspm/builtinRules/S3-037/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-037: S3 bucket with BlockPublicAcls set to false'
+
+Resources:
+  S3037Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-037-${AWS::AccountId}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-037

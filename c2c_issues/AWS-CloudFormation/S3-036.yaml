@@ -1,0 +1,26 @@
+# S3-036 — S3 bucket with unsecured CORS rule — based on cspm/builtinRules/S3-036/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-036: S3 bucket with unsecured CORS rule (AllowedOrigins: *, AllowedHeaders: *)'
+
+Resources:
+  S3036Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-036-${AWS::AccountId}'
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - Date
+            Id: unsecuredCORSRule
+            MaxAge: 3600
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-036

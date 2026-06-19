@@ -1,0 +1,25 @@
+# S3-019 — S3 bucket policy allows put action from all principals — based on cspm/builtinRules/S3-019/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-019: S3 bucket policy allows PutObject from all principals (note: fixture includes Condition but rego does NOT check for condition)'
+
+Resources:
+  S3019Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-019-${AWS::AccountId}'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-019
+
+  S3019BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3019Bucket
+      PolicyDocument:
+        Statement:
+          - Action: PutObject
+            Effect: Allow
+            Resource: !Sub '${S3019Bucket.Arn}/*'
+            Principal: '*'

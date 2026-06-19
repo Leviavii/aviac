@@ -1,0 +1,25 @@
+# S3-017 — S3 bucket policy allows get action from all principals — based on cspm/builtinRules/S3-017/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-017: S3 bucket policy allows GetObject from all principals without condition'
+
+Resources:
+  S3017Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-017-${AWS::AccountId}'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-017
+
+  S3017BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3017Bucket
+      PolicyDocument:
+        Statement:
+          - Action: GetObject
+            Effect: Allow
+            Resource: !Sub '${S3017Bucket.Arn}/*'
+            Principal: '*'

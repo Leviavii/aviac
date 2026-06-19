@@ -1,0 +1,28 @@
+# VPC-027 — SG allows unrestricted MySQL access (tcp/3306) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-027/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — VPC-027: SG allows unrestricted MySQL access (tcp/3306) from 0.0.0.0/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC027:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted MySQL access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted MySQL access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-027
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-VPC-027'

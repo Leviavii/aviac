@@ -1,0 +1,33 @@
+# InstanceGroup-034 — AutoScaling LaunchConfiguration without IMDSv2 required — based on cspm/builtinRules/InstanceGroup-034 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: InstanceGroup-034 - AutoScaling LaunchConfiguration without HttpTokens required (non-compliant)
+
+Parameters:
+  SubnetIds:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Select at least one subnet for the Auto Scaling Group
+
+Resources:
+  LaunchConfigWithoutImdsv2:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      LaunchConfigurationName: !Sub '${AWS::StackName}-lc-no-imdsv2'
+      ImageId: '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
+      InstanceType: t3.micro
+
+  AutoScalingGroupNoImdsv2:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub '${AWS::StackName}-asg-no-imdsv2'
+      LaunchConfigurationName: !Ref LaunchConfigWithoutImdsv2
+      MinSize: '0'
+      MaxSize: '1'
+      DesiredCapacity: '0'
+      VPCZoneIdentifier: !Ref SubnetIds
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+          PropagateAtLaunch: true
+        - Key: Rule
+          Value: InstanceGroup-034
+          PropagateAtLaunch: true

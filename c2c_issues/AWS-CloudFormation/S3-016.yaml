@@ -1,0 +1,25 @@
+# S3-016 — S3 bucket policy allows delete action from all principals — based on cspm/builtinRules/S3-016/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-016: S3 bucket policy allows DeleteObject from all principals without condition'
+
+Resources:
+  S3016Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-016-${AWS::AccountId}'
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-016
+
+  S3016BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3016Bucket
+      PolicyDocument:
+        Statement:
+          - Action: DeleteObject
+            Effect: Allow
+            Resource: !Sub '${S3016Bucket.Arn}/*'
+            Principal: '*'

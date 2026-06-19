@@ -1,0 +1,28 @@
+# VPC-023 — SG allows unrestricted DNS access (udp/53) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-023/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'c2c CloudFormation — VPC-023: SG allows unrestricted DNS access (udp/53) from 0.0.0.0/0'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC023:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${AWS::StackName} - Unrestricted DNS UDP access'
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: udp
+          FromPort: 53
+          ToPort: 53
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted DNS UDP access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-023
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-VPC-023'

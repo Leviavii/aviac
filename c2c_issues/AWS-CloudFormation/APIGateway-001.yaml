@@ -1,0 +1,17 @@
+# APIGateway-001 — API Gateway REST API not PRIVATE endpoint — based on cspm/builtinRules/APIGateway-001 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: APIGateway-001 - REST API with EDGE endpoint configuration (non-compliant)
+
+Resources:
+  RestApiEdgeEndpoint:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub '${AWS::StackName}-edge-api'
+      EndpointConfiguration:
+        Types:
+          - EDGE
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: APIGateway-001

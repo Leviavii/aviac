@@ -1,0 +1,15 @@
+# CRS-001 — ECR Repository with mutable image tags — based on cspm/builtinRules/CRS-001 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CRS-001 - ECR Repository with ImageTagMutability set to MUTABLE (non-compliant)
+
+Resources:
+  MutableEcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub '${AWS::StackName}-mutable-repo'
+      ImageTagMutability: MUTABLE
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: CRS-001

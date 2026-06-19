@@ -1,0 +1,25 @@
+# S3-004 — S3 bucket ACL allows read to all users — based on cspm/builtinRules/S3-004/cloud_formation fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'S3-004: S3 bucket with AccessControl PublicRead (triggers ACL allows read to all users)'
+
+Resources:
+  S3004Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'c2c-s3-004-${AWS::AccountId}'
+      AccessControl: PublicRead
+      # OwnershipControls re-enables ACLs (disabled by default since 2023) so AccessControl deploys.
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      # Bucket-level BPA off so the public-read ACL is actually applied (account-level BPA may still override).
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: S3-004
