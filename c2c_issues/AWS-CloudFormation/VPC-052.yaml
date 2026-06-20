@@ -1,0 +1,31 @@
+# VPC-052 — Security Group allows unrestricted ElasticSearch access (ports 9200, 9300) — based on cspm/builtinRules/VPC-052 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted ElasticSearch access on TCP ports 9200 and 9300 (triggers VPC-052)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC052:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-052 - Allows unrestricted ElasticSearch access (TCP ports 9200, 9300)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 9200
+          ToPort: 9200
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted ElasticSearch REST API access
+        - IpProtocol: tcp
+          FromPort: 9300
+          ToPort: 9300
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted ElasticSearch transport access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-052

@@ -1,0 +1,26 @@
+# VPC-054 — Security Group allows unrestricted Memcached access (TCP port 11211) — based on cspm/builtinRules/VPC-054 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted Memcached access on TCP port 11211 (triggers VPC-054)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC054:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-054 - Allows unrestricted Memcached access (TCP port 11211)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 11211
+          ToPort: 11211
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted Memcached access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-054

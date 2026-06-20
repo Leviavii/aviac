@@ -1,0 +1,26 @@
+# VPC-055 — Security Group allows unrestricted Redis access (TCP port 6379) — based on cspm/builtinRules/VPC-055 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted Redis access on TCP port 6379 (triggers VPC-055)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC055:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-055 - Allows unrestricted Redis access (TCP port 6379)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted Redis access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-055

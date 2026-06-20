@@ -1,0 +1,26 @@
+# VPC-032 — Security Group allows unrestricted SMTP access (TCP port 25) — based on cspm/builtinRules/VPC-032 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted SMTP access on TCP port 25 (triggers VPC-032)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC032:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-032 - Allows unrestricted SMTP access (TCP port 25)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 25
+          ToPort: 25
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted SMTP access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-032

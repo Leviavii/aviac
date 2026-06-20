@@ -1,0 +1,26 @@
+# VPC-051 — Security Group allows unrestricted Cassandra access (TCP port 7199) — based on cspm/builtinRules/VPC-051 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted Cassandra access on TCP port 7199 (triggers VPC-051)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC051:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-051 - Allows unrestricted Cassandra access (TCP port 7199)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 7199
+          ToPort: 7199
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted Cassandra JMX access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-051

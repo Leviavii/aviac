@@ -1,0 +1,26 @@
+# VPC-057 — Security Group allows unrestricted Kibana access (TCP port 5601) — based on cspm/builtinRules/VPC-057 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted Kibana access on TCP port 5601 (triggers VPC-057)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC057:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-057 - Allows unrestricted Kibana access (TCP port 5601)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5601
+          ToPort: 5601
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted Kibana access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-057

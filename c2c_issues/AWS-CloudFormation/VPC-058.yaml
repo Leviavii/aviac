@@ -1,0 +1,26 @@
+# VPC-058 — Security Group allows unrestricted etcd access (TCP port 2379) — based on cspm/builtinRules/VPC-058 fixture
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Security Group allowing unrestricted etcd access on TCP port 2379 (triggers VPC-058)
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for the security group
+
+Resources:
+  C2cVPC058:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: VPC-058 - Allows unrestricted etcd access (TCP port 2379)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 2379
+          ToPort: 2379
+          CidrIp: 0.0.0.0/0
+          Description: Unrestricted etcd client access
+      Tags:
+        - Key: Project
+          Value: wiz-c2c-cloudformation
+        - Key: Rule
+          Value: VPC-058
