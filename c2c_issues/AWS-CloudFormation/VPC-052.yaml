@@ -1,4 +1,4 @@
-# VPC-052 — Security Group allows unrestricted ElasticSearch access (ports 9200, 9300) — based on cspm/builtinRules/VPC-052 fixture
+# VPC-052 - Security Group allows unrestricted ElasticSearch access (ports 9200, 9300) - based on cspm/builtinRules/VPC-052 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted ElasticSearch access on TCP ports 9200 and 9300 (triggers VPC-052)
 

@@ -1,4 +1,4 @@
-# S3-017 — S3 bucket policy allows get action from all principals — based on cspm/builtinRules/S3-017/cloud_formation fixture
+# S3-017 - S3 bucket policy allows get action from all principals - based on cspm/builtinRules/S3-017/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-017: S3 bucket policy allows GetObject from all principals without condition'
 

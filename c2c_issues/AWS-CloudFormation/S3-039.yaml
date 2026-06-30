@@ -1,4 +1,4 @@
-# S3-039 — S3 bucket BlockPublicPolicy is not set or false — based on cspm/builtinRules/S3-039/cloud_formation fixture
+# S3-039 - S3 bucket BlockPublicPolicy is not set or false - based on cspm/builtinRules/S3-039/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-039: S3 bucket with BlockPublicPolicy set to false'
 

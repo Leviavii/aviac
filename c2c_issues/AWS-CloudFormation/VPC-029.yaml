@@ -1,6 +1,6 @@
-# VPC-029 — SG allows unrestricted PostgreSQL access (tcp/5432) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-029/cloud_formation fixture
+# VPC-029 - SG allows unrestricted PostgreSQL access (tcp/5432) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-029/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation — VPC-029: SG allows unrestricted PostgreSQL access (tcp/5432) from 0.0.0.0/0'
+Description: 'c2c CloudFormation - VPC-029: SG allows unrestricted PostgreSQL access (tcp/5432) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

@@ -1,4 +1,4 @@
-# EC2-011 — EC2 instance with public IP via NetworkInterfaces — based on cspm/builtinRules/EC2-011 fixture
+# EC2-011 - EC2 instance with public IP via NetworkInterfaces - based on cspm/builtinRules/EC2-011 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: EC2-011 - EC2 instance with AssociatePublicIpAddress set to true (non-compliant)
 

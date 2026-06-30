@@ -1,4 +1,4 @@
-# S3-012 — S3 bucket should have all Block Public Access settings enabled — based on cspm/builtinRules/S3-012/cloud_formation fixture
+# S3-012 - S3 bucket should have all Block Public Access settings enabled - based on cspm/builtinRules/S3-012/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-012: S3 bucket with BlockPublicAcls set to false (triggers missing/incomplete Block Public Access)'
 

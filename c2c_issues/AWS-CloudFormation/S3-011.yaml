@@ -1,4 +1,4 @@
-# S3-011 — S3 bucket should not be publicly exposed to the internet — based on cspm/builtinRules/S3-011/cloud_formation fixture
+# S3-011 - S3 bucket should not be publicly exposed to the internet - based on cspm/builtinRules/S3-011/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-011: S3 bucket with AccessControl PublicReadWrite (triggers public exposure)'
 

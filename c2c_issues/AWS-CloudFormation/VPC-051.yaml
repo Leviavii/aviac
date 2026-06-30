@@ -1,4 +1,4 @@
-# VPC-051 — Security Group allows unrestricted Cassandra access (TCP port 7199) — based on cspm/builtinRules/VPC-051 fixture
+# VPC-051 - Security Group allows unrestricted Cassandra access (TCP port 7199) - based on cspm/builtinRules/VPC-051 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted Cassandra access on TCP port 7199 (triggers VPC-051)
 

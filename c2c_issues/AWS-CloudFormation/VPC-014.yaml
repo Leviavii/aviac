@@ -1,6 +1,6 @@
-# VPC-014 — SG allows unrestricted RDP access (tcp/3389) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-014/cloud_formation fixture
+# VPC-014 - SG allows unrestricted RDP access (tcp/3389) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-014/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation — VPC-014: SG allows unrestricted RDP access (tcp/3389) from 0.0.0.0/0'
+Description: 'c2c CloudFormation - VPC-014: SG allows unrestricted RDP access (tcp/3389) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

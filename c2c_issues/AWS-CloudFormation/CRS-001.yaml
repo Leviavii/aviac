@@ -1,4 +1,4 @@
-# CRS-001 — ECR Repository with mutable image tags — based on cspm/builtinRules/CRS-001 fixture
+# CRS-001 - ECR Repository with mutable image tags - based on cspm/builtinRules/CRS-001 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: CRS-001 - ECR Repository with ImageTagMutability set to MUTABLE (non-compliant)
 

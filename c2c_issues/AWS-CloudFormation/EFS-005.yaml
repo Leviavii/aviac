@@ -1,4 +1,4 @@
-# EFS-005 — EFS FileSystem without FileSystemPolicy — based on cspm/builtinRules/EFS-005 fixture
+# EFS-005 - EFS FileSystem without FileSystemPolicy - based on cspm/builtinRules/EFS-005 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: EFS-005 - EFS FileSystem without user-configured FileSystemPolicy (non-compliant)
 

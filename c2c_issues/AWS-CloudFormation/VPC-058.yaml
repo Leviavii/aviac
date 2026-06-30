@@ -1,4 +1,4 @@
-# VPC-058 — Security Group allows unrestricted etcd access (TCP port 2379) — based on cspm/builtinRules/VPC-058 fixture
+# VPC-058 - Security Group allows unrestricted etcd access (TCP port 2379) - based on cspm/builtinRules/VPC-058 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted etcd access on TCP port 2379 (triggers VPC-058)
 

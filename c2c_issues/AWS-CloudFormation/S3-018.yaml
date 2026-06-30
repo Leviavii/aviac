@@ -1,4 +1,4 @@
-# S3-018 — S3 bucket policy allows list action from all principals — based on cspm/builtinRules/S3-018/cloud_formation fixture
+# S3-018 - S3 bucket policy allows list action from all principals - based on cspm/builtinRules/S3-018/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-018: S3 bucket policy allows ListObject from all principals without condition'
 

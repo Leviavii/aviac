@@ -1,6 +1,6 @@
-# VPC-022 — SG allows unrestricted DNS access (tcp/53) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-022/cloud_formation fixture
+# VPC-022 - SG allows unrestricted DNS access (tcp/53) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-022/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation — VPC-022: SG allows unrestricted DNS access (tcp/53) from 0.0.0.0/0'
+Description: 'c2c CloudFormation - VPC-022: SG allows unrestricted DNS access (tcp/53) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

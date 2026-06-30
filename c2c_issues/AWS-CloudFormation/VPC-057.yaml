@@ -1,4 +1,4 @@
-# VPC-057 — Security Group allows unrestricted Kibana access (TCP port 5601) — based on cspm/builtinRules/VPC-057 fixture
+# VPC-057 - Security Group allows unrestricted Kibana access (TCP port 5601) - based on cspm/builtinRules/VPC-057 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted Kibana access on TCP port 5601 (triggers VPC-057)
 

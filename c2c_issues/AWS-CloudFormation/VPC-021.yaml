@@ -1,6 +1,6 @@
-# VPC-021 — SG allows unrestricted CIFS access (tcp/445,139 + udp/137,138,445) from 0.0.0.0/0 and ::/0 — based on cspm/builtinRules/VPC-021/cloud_formation fixture
+# VPC-021 - SG allows unrestricted CIFS access (tcp/445,139 + udp/137,138,445) from 0.0.0.0/0 and ::/0 - based on cspm/builtinRules/VPC-021/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation — VPC-021: SG allows unrestricted CIFS access (multiple ports) from 0.0.0.0/0 and ::/0'
+Description: 'c2c CloudFormation - VPC-021: SG allows unrestricted CIFS access (multiple ports) from 0.0.0.0/0 and ::/0'
 
 Parameters:
   VpcId:

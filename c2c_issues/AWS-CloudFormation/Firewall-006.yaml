@@ -1,6 +1,6 @@
-# Firewall-006 — SG allows unrestricted HTTPS access (tcp/443) from 0.0.0.0/0 — based on cspm/builtinRules/Firewall-006/cloud_formation fixture
+# Firewall-006 - SG allows unrestricted HTTPS access (tcp/443) from 0.0.0.0/0 - based on cspm/builtinRules/Firewall-006/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation — Firewall-006: SG allows unrestricted HTTPS access (tcp/443) from 0.0.0.0/0'
+Description: 'c2c CloudFormation - Firewall-006: SG allows unrestricted HTTPS access (tcp/443) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

@@ -1,6 +1,6 @@
-# VPC-019 — SG allows unrestricted RPC access (tcp/135) from 0.0.0.0/0 — based on cspm/builtinRules/VPC-019/cloud_formation fixture
+# VPC-019 - SG allows unrestricted RPC access (tcp/135) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-019/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation — VPC-019: SG allows unrestricted RPC access (tcp/135) from 0.0.0.0/0'
+Description: 'c2c CloudFormation - VPC-019: SG allows unrestricted RPC access (tcp/135) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

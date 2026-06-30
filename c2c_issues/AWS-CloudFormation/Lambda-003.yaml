@@ -1,4 +1,4 @@
-# Lambda-003 — Lambda LayerVersionPermission with wildcard Principal — based on cspm/builtinRules/Lambda-003 fixture
+# Lambda-003 - Lambda LayerVersionPermission with wildcard Principal - based on cspm/builtinRules/Lambda-003 fixture
 # Note: This template creates a LayerVersionPermission granting public access.
 # A real LayerVersion requires content (S3 or inline). This demonstrates the permission misconfiguration only.
 AWSTemplateFormatVersion: '2010-09-09'

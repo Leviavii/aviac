@@ -1,4 +1,4 @@
-# APIGateway-001 — API Gateway REST API not PRIVATE endpoint — based on cspm/builtinRules/APIGateway-001 fixture
+# APIGateway-001 - API Gateway REST API not PRIVATE endpoint - based on cspm/builtinRules/APIGateway-001 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: APIGateway-001 - REST API with EDGE endpoint configuration (non-compliant)
 

@@ -1,4 +1,4 @@
-# IAM-236 — Bedrock service role missing confused-deputy protection condition — based on cspm/builtinRules/IAM-236 fixture
+# IAM-236 - Bedrock service role missing confused-deputy protection condition - based on cspm/builtinRules/IAM-236 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: IAM-236 - IAM role trusting Bedrock service without aws:SourceAccount/SourceArn condition (non-compliant)
 

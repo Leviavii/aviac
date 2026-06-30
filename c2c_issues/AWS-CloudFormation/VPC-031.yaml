@@ -1,4 +1,4 @@
-# VPC-031 — Security Group allows unrestricted UDP SQL Server access (port 1434) — based on cspm/builtinRules/VPC-031 fixture
+# VPC-031 - Security Group allows unrestricted UDP SQL Server access (port 1434) - based on cspm/builtinRules/VPC-031 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted UDP access to SQL Server port 1434 (triggers VPC-031)
 

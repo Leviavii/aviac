@@ -1,4 +1,4 @@
-# VPC-034 — Security Group allows unrestricted SSH/RDP access (ports 22, 3389) — based on cspm/builtinRules/VPC-034 fixture
+# VPC-034 - Security Group allows unrestricted SSH/RDP access (ports 22, 3389) - based on cspm/builtinRules/VPC-034 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted SSH access on TCP port 22 (triggers VPC-034)
 
