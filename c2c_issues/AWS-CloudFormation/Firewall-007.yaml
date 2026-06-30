@@ -1,6 +1,6 @@
-# Firewall-007 - SG allows access from wide private network (10.0.0.0/8) - based on cspm/builtinRules/Firewall-007/cloud_formation fixture
+# Firewall-007 SG allows access from wide private network (10.0.0.0/8) based on cspm/builtinRules/Firewall-007/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - Firewall-007: SG allows access from wide private network (10.0.0.0/8)'
+Description: 'c2c CloudFormation Firewall-007: SG allows access from wide private network (10.0.0.0/8)'
 
 Parameters:
   VpcId:

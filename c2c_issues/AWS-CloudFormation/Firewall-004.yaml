@@ -1,6 +1,6 @@
-# Firewall-004 - SG allows unrestricted MongoDB access (tcp/27017-27020) from 0.0.0.0/0 - based on cspm/builtinRules/Firewall-004/cloud_formation fixture
+# Firewall-004 SG allows unrestricted MongoDB access (tcp/27017-27020) from 0.0.0.0/0 based on cspm/builtinRules/Firewall-004/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - Firewall-004: SG allows unrestricted MongoDB access (tcp/27017-27020) from 0.0.0.0/0'
+Description: 'c2c CloudFormation Firewall-004: SG allows unrestricted MongoDB access (tcp/27017-27020) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

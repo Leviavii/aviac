@@ -1,6 +1,6 @@
-# InstanceGroup-034 - AutoScaling LaunchConfiguration without IMDSv2 required - based on cspm/builtinRules/InstanceGroup-034 fixture
+# InstanceGroup-034 AutoScaling LaunchConfiguration without IMDSv2 required based on cspm/builtinRules/InstanceGroup-034 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: InstanceGroup-034 - AutoScaling LaunchConfiguration without HttpTokens required (non-compliant)
+Description: InstanceGroup-034 AutoScaling LaunchConfiguration without HttpTokens required (non-compliant)
 
 Parameters:
   SubnetIds:

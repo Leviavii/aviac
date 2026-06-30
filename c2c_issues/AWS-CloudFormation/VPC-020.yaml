@@ -1,6 +1,6 @@
-# VPC-020 - SG allows unrestricted SMB access (tcp/445) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-020/cloud_formation fixture
+# VPC-020 SG allows unrestricted SMB access (tcp/445) from 0.0.0.0/0 based on cspm/builtinRules/VPC-020/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - VPC-020: SG allows unrestricted SMB access (tcp/445) from 0.0.0.0/0'
+Description: 'c2c CloudFormation VPC-020: SG allows unrestricted SMB access (tcp/445) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

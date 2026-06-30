@@ -1,6 +1,6 @@
-# VPC-028 - SG allows unrestricted NetBIOS access (tcp/139) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-028/cloud_formation fixture
+# VPC-028 SG allows unrestricted NetBIOS access (tcp/139) from 0.0.0.0/0 based on cspm/builtinRules/VPC-028/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - VPC-028: SG allows unrestricted NetBIOS access (tcp/139) from 0.0.0.0/0'
+Description: 'c2c CloudFormation VPC-028: SG allows unrestricted NetBIOS access (tcp/139) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

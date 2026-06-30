@@ -1,6 +1,6 @@
-# VPC-016 - SG allows unrestricted Telnet access (tcp/23) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-016/cloud_formation fixture
+# VPC-016 SG allows unrestricted Telnet access (tcp/23) from 0.0.0.0/0 based on cspm/builtinRules/VPC-016/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - VPC-016: SG allows unrestricted Telnet access (tcp/23) from 0.0.0.0/0'
+Description: 'c2c CloudFormation VPC-016: SG allows unrestricted Telnet access (tcp/23) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

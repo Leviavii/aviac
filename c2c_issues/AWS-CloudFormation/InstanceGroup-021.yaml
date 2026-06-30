@@ -1,6 +1,6 @@
-# InstanceGroup-021 - ECS Service with SecurityGroupIngress open to 0.0.0.0/0 on all ports - based on cspm/builtinRules/InstanceGroup-021 fixture
+# InstanceGroup-021 ECS Service with SecurityGroupIngress open to 0.0.0.0/0 on all ports based on cspm/builtinRules/InstanceGroup-021 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: InstanceGroup-021 - ECS Service with security group ingress from 0.0.0.0/0 to all ports (non-compliant)
+Description: InstanceGroup-021 ECS Service with security group ingress from 0.0.0.0/0 to all ports (non-compliant)
 
 Parameters:
   SubnetIds:

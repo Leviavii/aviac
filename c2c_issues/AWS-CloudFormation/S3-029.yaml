@@ -1,4 +1,4 @@
-# S3-029 - S3 bucket policy allows all actions from all principals - based on cspm/builtinRules/S3-029/cloud_formation fixture
+# S3-029 S3 bucket policy allows all actions from all principals based on cspm/builtinRules/S3-029/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-029: S3 bucket policy allows all actions (*) from all principals'
 

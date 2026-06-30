@@ -1,6 +1,6 @@
-# VirtualMachines-033 - Lightsail instance with SSH port 22 open to 0.0.0.0/0 - based on cspm/builtinRules/VirtualMachines-033 fixture
+# VirtualMachines-033 Lightsail instance with SSH port 22 open to 0.0.0.0/0 based on cspm/builtinRules/VirtualMachines-033 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: VirtualMachines-033 - Lightsail instance allowing all IPs SSH access (non-compliant)
+Description: VirtualMachines-033 Lightsail instance allowing all IPs SSH access (non-compliant)
 
 Resources:
   LightsailInstanceSshOpen:

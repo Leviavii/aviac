@@ -1,4 +1,4 @@
-# S3-019 - S3 bucket policy allows put action from all principals - based on cspm/builtinRules/S3-019/cloud_formation fixture
+# S3-019 S3 bucket policy allows put action from all principals based on cspm/builtinRules/S3-019/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-019: S3 bucket policy allows PutObject from all principals (note: fixture includes Condition but rego does NOT check for condition)'
 

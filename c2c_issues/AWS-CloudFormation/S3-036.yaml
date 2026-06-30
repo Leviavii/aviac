@@ -1,4 +1,4 @@
-# S3-036 - S3 bucket with unsecured CORS rule - based on cspm/builtinRules/S3-036/cloud_formation fixture
+# S3-036 S3 bucket with unsecured CORS rule based on cspm/builtinRules/S3-036/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3-036: S3 bucket with unsecured CORS rule (AllowedOrigins: *, AllowedHeaders: *)'
 

@@ -1,6 +1,6 @@
-# VirtualMachines-031 - Lightsail instance with ports open to 0.0.0.0/0 - based on cspm/builtinRules/VirtualMachines-031 fixture
+# VirtualMachines-031 Lightsail instance with ports open to 0.0.0.0/0 based on cspm/builtinRules/VirtualMachines-031 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: VirtualMachines-031 - Lightsail instance allowing all IPv4 on all ports (non-compliant)
+Description: VirtualMachines-031 Lightsail instance allowing all IPv4 on all ports (non-compliant)
 
 Resources:
   LightsailInstanceAllPorts:

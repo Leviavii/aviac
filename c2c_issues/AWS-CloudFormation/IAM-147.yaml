@@ -1,6 +1,6 @@
-# IAM-147 - IAM role allows wildcard (*) principal in AssumeRolePolicyDocument - based on cspm/builtinRules/IAM-147 fixture
+# IAM-147 IAM role allows wildcard (*) principal in AssumeRolePolicyDocument based on cspm/builtinRules/IAM-147 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: IAM-147 - IAM role with wildcard principal in assume role policy (non-compliant)
+Description: IAM-147 IAM role with wildcard principal in assume role policy (non-compliant)
 
 Resources:
   WildcardAssumeRole:

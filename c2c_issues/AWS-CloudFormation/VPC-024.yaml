@@ -1,6 +1,6 @@
-# VPC-024 - SG allows unrestricted FTP access (tcp/21) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-024/cloud_formation fixture
+# VPC-024 SG allows unrestricted FTP access (tcp/21) from 0.0.0.0/0 based on cspm/builtinRules/VPC-024/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - VPC-024: SG allows unrestricted FTP access (tcp/21) from 0.0.0.0/0'
+Description: 'c2c CloudFormation VPC-024: SG allows unrestricted FTP access (tcp/21) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

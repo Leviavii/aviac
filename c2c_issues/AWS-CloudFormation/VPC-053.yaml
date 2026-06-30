@@ -1,4 +1,4 @@
-# VPC-053 - Security Group allows unrestricted LDAP access (TCP port 389) - based on cspm/builtinRules/VPC-053 fixture
+# VPC-053 Security Group allows unrestricted LDAP access (TCP port 389) based on cspm/builtinRules/VPC-053 fixture
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Security Group allowing unrestricted LDAP access on TCP port 389 (triggers VPC-053)
 

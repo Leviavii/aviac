@@ -1,6 +1,6 @@
-# EC2-005 - EC2 instance without VPC (no SubnetId or NetworkInterfaces) - based on cspm/builtinRules/EC2-005 fixture
+# EC2-005 EC2 instance without VPC (no SubnetId or NetworkInterfaces) based on cspm/builtinRules/EC2-005 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: EC2-005 - EC2 instance launched in EC2-Classic (no VPC) (non-compliant)
+Description: EC2-005 EC2 instance launched in EC2-Classic (no VPC) (non-compliant)
 
 Resources:
   InstanceWithoutVpc:

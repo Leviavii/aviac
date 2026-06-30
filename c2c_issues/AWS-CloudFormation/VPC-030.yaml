@@ -1,6 +1,6 @@
-# VPC-030 - SG allows unrestricted MSSQL access (tcp/1433) from 0.0.0.0/0 - based on cspm/builtinRules/VPC-030/cloud_formation fixture
+# VPC-030 SG allows unrestricted MSSQL access (tcp/1433) from 0.0.0.0/0 based on cspm/builtinRules/VPC-030/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - VPC-030: SG allows unrestricted MSSQL access (tcp/1433) from 0.0.0.0/0'
+Description: 'c2c CloudFormation VPC-030: SG allows unrestricted MSSQL access (tcp/1433) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

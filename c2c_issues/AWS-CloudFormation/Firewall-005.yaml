@@ -1,6 +1,6 @@
-# Firewall-005 - SG allows unrestricted HTTP access (tcp/80) from 0.0.0.0/0 - based on cspm/builtinRules/Firewall-005/cloud_formation fixture
+# Firewall-005 SG allows unrestricted HTTP access (tcp/80) from 0.0.0.0/0 based on cspm/builtinRules/Firewall-005/cloud_formation fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'c2c CloudFormation - Firewall-005: SG allows unrestricted HTTP access (tcp/80) from 0.0.0.0/0'
+Description: 'c2c CloudFormation Firewall-005: SG allows unrestricted HTTP access (tcp/80) from 0.0.0.0/0'
 
 Parameters:
   VpcId:

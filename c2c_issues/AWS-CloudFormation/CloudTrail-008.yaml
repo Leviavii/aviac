@@ -1,6 +1,6 @@
-# CloudTrail-008 - CloudTrail not multi-region or missing IsMultiRegionTrail - based on cspm/builtinRules/CloudTrail-008 fixture
+# CloudTrail-008 CloudTrail not multi-region or missing IsMultiRegionTrail based on cspm/builtinRules/CloudTrail-008 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudTrail-008 - CloudTrail trail with IsMultiRegionTrail set to false (non-compliant)
+Description: CloudTrail-008 CloudTrail trail with IsMultiRegionTrail set to false (non-compliant)
 
 Resources:
   TrailBucket:

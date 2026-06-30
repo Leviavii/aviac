@@ -1,6 +1,6 @@
-# IDP-001 - Cognito IdentityPool allows unauthenticated access - based on cspm/builtinRules/IDP-001 fixture
+# IDP-001 Cognito IdentityPool allows unauthenticated access based on cspm/builtinRules/IDP-001 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: IDP-001 - Cognito IdentityPool with AllowUnauthenticatedIdentities set to true (non-compliant)
+Description: IDP-001 Cognito IdentityPool with AllowUnauthenticatedIdentities set to true (non-compliant)
 
 Resources:
   UnauthenticatedIdentityPool:

@@ -1,6 +1,6 @@
-# EC2-004 - EC2 LaunchTemplate without IMDSv2 required - based on cspm/builtinRules/EC2-004 fixture
+# EC2-004 EC2 LaunchTemplate without IMDSv2 required based on cspm/builtinRules/EC2-004 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: EC2-004 - EC2 instance via LaunchTemplate without IMDSv2 required (non-compliant)
+Description: EC2-004 EC2 instance via LaunchTemplate without IMDSv2 required (non-compliant)
 
 Parameters:
   SubnetId:

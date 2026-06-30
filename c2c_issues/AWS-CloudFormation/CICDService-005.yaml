@@ -1,6 +1,6 @@
-# CICDService-005 - CodeBuild project with sensitive env vars in plaintext - based on cspm/builtinRules/CICDService-005 fixture
+# CICDService-005 CodeBuild project with sensitive env vars in plaintext based on cspm/builtinRules/CICDService-005 fixture
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CICDService-005 - CodeBuild project with AWS credentials in plaintext (non-compliant)
+Description: CICDService-005 CodeBuild project with AWS credentials in plaintext (non-compliant)
 
 Resources:
   CodeBuildServiceRole:
