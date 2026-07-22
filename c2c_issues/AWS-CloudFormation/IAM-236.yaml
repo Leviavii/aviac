@@ -14,6 +14,9 @@ Resources:
             Principal:
               Service: bedrock.amazonaws.com
             Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref 'AWS::AccountId'
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/ReadOnlyAccess'
       Tags:
