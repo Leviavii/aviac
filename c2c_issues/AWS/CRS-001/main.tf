@@ -4,7 +4,7 @@
 resource "aws_ecr_repository" "crs001_mutable_repo" {
   name                 = "crs001-mutable-repo"
   # MISCONFIGURATION: image tags are mutable
-  image_tag_mutability = "MUTABLE"
+  image_tag_mutability = "IMMUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true
