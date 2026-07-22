@@ -18,17 +18,16 @@ resource "aws_codebuild_project" "cicdservice005_cleartext_creds" {
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
 
-    # MISCONFIGURATION: Credentials stored as PLAINTEXT
     environment_variable {
       name  = "AWS_ACCESS_KEY_ID"
-      value = "AKIAIOSFODNN7EXAMPLE"
-      type  = "PLAINTEXT"
+      value = "/codebuild/cicdservice005/aws_access_key_id"
+      type  = "PARAMETER_STORE"
     }
 
     environment_variable {
       name  = "AWS_SECRET_ACCESS_KEY"
-      value = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-      type  = "PLAINTEXT"
+      value = "/codebuild/cicdservice005/aws_secret_access_key"
+      type  = "PARAMETER_STORE"
     }
   }
 
