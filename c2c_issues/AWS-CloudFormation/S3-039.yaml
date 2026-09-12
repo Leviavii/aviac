@@ -8,7 +8,7 @@ Resources:
     Properties:
       BucketName: !Sub 'c2c-s3-039-${AWS::AccountId}'
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
+        BlockPublicAcls: true
         BlockPublicPolicy: false
         IgnorePublicAcls: false
         RestrictPublicBuckets: true
