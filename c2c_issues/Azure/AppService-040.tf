@@ -16,4 +16,8 @@ resource "azurerm_linux_web_app" "c2c_appservice_040" {
   service_plan_id     = azurerm_service_plan.c2c_appservice_040.id
 
   site_config {}
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
