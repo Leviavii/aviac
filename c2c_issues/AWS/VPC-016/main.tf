@@ -5,13 +5,6 @@ resource "aws_security_group" "wiz_vpc_016" {
   description = "Misconfigured SG for VPC-016"
   vpc_id      = var.vpc_id
 
-  ingress {
-    from_port   = 23
-    to_port     = 23
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
