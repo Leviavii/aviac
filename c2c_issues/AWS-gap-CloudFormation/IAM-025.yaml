@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-025 versions
+Resources:
+  PolExplicit:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam025-pol-explicit
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: "*"
+            Resource: "*"
+      Roles:
+        - !Ref PolExplicitRole
+  PolExplicitRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam025-pol-explicit-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-025
+        - Key: Project
+          Value: wiz-c2c-gap
+  PolSingleStmt:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam025-pol-single-stmt
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Action:
+            - "*"
+          Resource:
+            - "*"
+      Users:
+        - !Ref PolSingleStmtUser
+  PolSingleStmtUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: c2cgap-iam025-pol-single-stmt-user
+      Tags:
+        - Key: Rule
+          Value: IAM-025
+        - Key: Project
+          Value: wiz-c2c-gap
+        - Key: owner
+          Value: avi.leviav
+  PolJsonString:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam025-pol-json-string
+      PolicyDocument: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "*"
+            }
+          ]
+        }
+      Groups:
+        - !Ref PolJsonStringGroup
+  PolJsonStringGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: c2cgap-iam025-pol-json-string-group
+  MgdExplicit:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2cgap-iam025-mgd-explicit
+      Roles:
+        - !Ref MgdExplicitRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: "*"
+            Resource: "*"
+  MgdExplicitRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam025-mgd-explicit-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-025
+        - Key: Project
+          Value: wiz-c2c-gap

@@ -1,0 +1,214 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-081 cloud-failing variants
+Resources:
+  IamExplicitAssume:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-explicit-assume
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource: "*"
+      Roles:
+        - !Ref IamExplicitAssumeRole
+  IamExplicitAssumeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam081-explicit-assume-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap
+  IamAdminWildcard:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-admin-wildcard
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: "*"
+            Resource: "*"
+      Users:
+        - !Ref IamAdminWildcardUser
+  IamAdminWildcardUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: c2cgap-iam081-admin-wildcard-user
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap
+        - Key: owner
+          Value: avi.leviav
+  IamStsWildcardSingle:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-sts-wildcard-single
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Action: sts:*
+          Resource:
+            - "*"
+      Groups:
+        - !Ref IamStsWildcardSingleGroup
+  IamStsWildcardSingleGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: c2cgap-iam081-sts-wildcard-single-group
+  IamJsonString:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-json-string
+      PolicyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"sts:AssumeRole","Resource":"*"}]}'
+      Roles:
+        - !Ref IamJsonStringRole
+  IamJsonStringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam081-json-string-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap
+  IamMultiStatement:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-multi-statement
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: ReadBucket
+            Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: arn:aws:s3:::example-bucket/*
+          - Sid: AssumeAnything
+            Effect: Allow
+            Action:
+              - s3:ListBucket
+              - sts:AssumeRole
+            Resource:
+              - arn:aws:s3:::example-bucket
+              - "*"
+      Roles:
+        - !Ref IamMultiStatementRole
+  IamMultiStatementRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam081-multi-statement-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap
+  IamSubJson:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-sub-json
+      PolicyDocument: !Sub '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"sts:AssumeRole","Resource":"*"}]}'
+      Roles:
+        - !Ref IamSubJsonRole
+  IamSubJsonRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam081-sub-json-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap
+  IamUpperCase:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam081-upper-case
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AssumeAny
+            Effect: Allow
+            Action: STS:AssumeRole
+            Resource: "*"
+      Roles:
+        - !Ref IamUpperCaseRole
+  IamUpperCaseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam081-upper-case-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap
+  IamManagedAssume:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2cgap-iam081-managed-assume
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource: "*"
+      Roles:
+        - !Ref IamManagedAssumeRole
+  IamManagedAssumeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam081-managed-assume-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+        - Key: Project
+          Value: wiz-c2c-gap

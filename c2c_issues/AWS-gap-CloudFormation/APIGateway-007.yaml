@@ -1,0 +1,157 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-007 variants
+Resources:
+  ApiNoWaf:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway007-cfn-nowaf
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiNoWafRootGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiNoWaf
+      ResourceId: !GetAtt ApiNoWaf.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiNoWafDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiNoWafRootGet
+    Properties:
+      RestApiId: !Ref ApiNoWaf
+  ApiNoWafStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: nowaf
+      RestApiId: !Ref ApiNoWaf
+      DeploymentId: !Ref ApiNoWafDeployment
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiImplicitStage:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway007-cfn-implicitstage
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiImplicitStageRootGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiImplicitStage
+      ResourceId: !GetAtt ApiImplicitStage.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiImplicitStageDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiImplicitStageRootGet
+    Properties:
+      RestApiId: !Ref ApiImplicitStage
+      StageName: implicit
+  ApiPartialWaf:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway007-cfn-partialwaf
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiPartialWafRootGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiPartialWaf
+      ResourceId: !GetAtt ApiPartialWaf.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiPartialWafDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiPartialWafRootGet
+    Properties:
+      RestApiId: !Ref ApiPartialWaf
+  ApiPartialWafProdStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: prod
+      RestApiId: !Ref ApiPartialWaf
+      DeploymentId: !Ref ApiPartialWafDeployment
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiPartialWafDevStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: dev
+      RestApiId: !Ref ApiPartialWaf
+      DeploymentId: !Ref ApiPartialWafDeployment
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiPartialWafWebAcl:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: c2cgap-apigateway007-cfn-partialwaf
+      Scope: REGIONAL
+      DefaultAction:
+        Allow: {}
+      Rules: []
+      VisibilityConfig:
+        SampledRequestsEnabled: false
+        CloudWatchMetricsEnabled: false
+        MetricName: c2cgap-apigateway007-cfn-partialwaf
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiPartialWafProdAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    DependsOn: ApiPartialWafProdStage
+    Properties:
+      WebACLArn: !GetAtt ApiPartialWafWebAcl.Arn
+      ResourceArn: !Sub arn:aws:apigateway:${AWS::Region}::/restapis/${ApiPartialWaf}/stages/prod
+  ApiSharedProdName:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway007-cfn-sharedprodname
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007
+  ApiSharedProdNameRootGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiSharedProdName
+      ResourceId: !GetAtt ApiSharedProdName.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiSharedProdNameDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiSharedProdNameRootGet
+    Properties:
+      RestApiId: !Ref ApiSharedProdName
+  ApiSharedProdNameStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: prod
+      RestApiId: !Ref ApiSharedProdName
+      DeploymentId: !Ref ApiSharedProdNameDeployment
+      Tags:
+        - Key: Rule
+          Value: APIGateway-007

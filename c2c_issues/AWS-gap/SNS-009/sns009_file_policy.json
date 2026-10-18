@@ -1,0 +1,12 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAccountPublish",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::306026247677:root" },
+      "Action": ["SNS:Publish", "SNS:Subscribe"],
+      "Resource": "arn:aws:sns:us-east-2:306026247677:c2cgap-sns009-file"
+    }
+  ]
+}

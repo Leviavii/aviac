@@ -1,0 +1,291 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-182 variants
+Parameters:
+  Env:
+    Type: String
+    Default: prod
+Conditions:
+  PolIfStatementIsProd: !Equals [!Ref Env, prod]
+  PolFnIfLongFormIsProd: !Equals [!Ref Env, prod]
+  ManagedIfStatementIsProd: !Equals [!Ref Env, prod]
+Resources:
+  PolNotActionInline:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-notaction-inline
+      Roles:
+        - !Ref PolNotActionInlineRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            NotAction:
+              - iam:*
+              - organizations:*
+            Resource: "*"
+  PolNotActionInlineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-notaction-inline-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  PolDenyNotResource:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-deny-notresource
+      Roles:
+        - !Ref PolDenyNotResourceRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowBucketRead
+            Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: arn:aws:s3:::c2cgap-iam182-example-bucket-306026247677/*
+          - Sid: DenyOtherBuckets
+            Effect: Deny
+            Action: s3:*
+            NotResource:
+              - arn:aws:s3:::c2cgap-iam182-example-bucket-306026247677
+              - arn:aws:s3:::c2cgap-iam182-example-bucket-306026247677/*
+  PolDenyNotResourceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-deny-notresource-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  PolJsonString:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-json-string
+      Roles:
+        - !Ref PolJsonStringRole
+      PolicyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","NotAction":["iam:*"],"Resource":"*"}]}'
+  PolJsonStringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-json-string-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  PolSubJson:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-sub-json
+      Roles:
+        - !Ref PolSubJsonRole
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "NotAction": ["iam:*"],
+              "Resource": "arn:aws:*:${AWS::Region}:${AWS::AccountId}:*"
+            }
+          ]
+        }
+  PolSubJsonRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-sub-json-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  PolSingleStatement:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-single-statement
+      Roles:
+        - !Ref PolSingleStatementRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          NotAction: iam:*
+          Resource: "*"
+  PolSingleStatementRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-single-statement-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  PolIfStatement:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-if-statement
+      Roles:
+        - !Ref PolIfStatementRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: s3:ListAllMyBuckets
+            Resource: "*"
+          - !If
+            - PolIfStatementIsProd
+            - Effect: Allow
+              NotAction: iam:*
+              Resource: "*"
+            - !Ref AWS::NoValue
+  PolIfStatementRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-if-statement-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  PolDenyNotActionMfa:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-deny-notaction-mfa
+      Groups:
+        - !Ref PolDenyNotActionMfaGroup
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowViewAccountInfo
+            Effect: Allow
+            Action:
+              - iam:GetAccountPasswordPolicy
+              - iam:ListVirtualMFADevices
+            Resource: "*"
+          - Sid: DenyAllExceptListedIfNoMFA
+            Effect: Deny
+            NotAction:
+              - iam:CreateVirtualMFADevice
+              - iam:EnableMFADevice
+              - iam:GetUser
+              - iam:ListMFADevices
+              - iam:ListVirtualMFADevices
+              - iam:ResyncMFADevice
+              - sts:GetSessionToken
+            Resource: "*"
+            Condition:
+              BoolIfExists:
+                aws:MultiFactorAuthPresent: "false"
+  PolDenyNotActionMfaGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: c2cgap-iam182-pol-deny-notaction-mfa-group
+  PolFnIfLongForm:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2cgap-iam182-pol-fnif-long-form
+      Roles:
+        - !Ref PolFnIfLongFormRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: s3:ListAllMyBuckets
+            Resource: "*"
+          - Fn::If:
+              - PolFnIfLongFormIsProd
+              - Effect: Allow
+                NotAction: iam:*
+                Resource: "*"
+              - Ref: AWS::NoValue
+  PolFnIfLongFormRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam182-pol-fnif-long-form-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-182
+  ManagedNotAction:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2cgap-iam182-managed-notaction
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            NotAction:
+              - iam:*
+              - organizations:*
+            Resource: "*"
+  ManagedJsonString:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2cgap-iam182-managed-json-string
+      PolicyDocument: '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","NotAction":["iam:*"],"Resource":"*"}]}'
+  ManagedSingleStatement:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2cgap-iam182-managed-single-statement
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          NotAction: iam:*
+          Resource: "*"
+  ManagedIfStatement:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2cgap-iam182-managed-if-statement
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: s3:ListAllMyBuckets
+            Resource: "*"
+          - !If
+            - ManagedIfStatementIsProd
+            - Effect: Allow
+              NotAction: iam:*
+              Resource: "*"
+            - !Ref AWS::NoValue

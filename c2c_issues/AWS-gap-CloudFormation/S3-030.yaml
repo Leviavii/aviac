@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3-030 variants
+Resources:
+  S3030Explicit:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "c2cgap-s3030-cfn-explicit-${AWS::AccountId}"
+      Tags:
+        - Key: Rule
+          Value: S3-030
+  S3030ExplicitPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3030Explicit
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowAll
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: s3:*
+            Resource:
+              - !GetAtt S3030Explicit.Arn
+              - !Sub "${S3030Explicit.Arn}/*"
+  S3030MultiStmt:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "c2cgap-s3030-cfn-multistmt-${AWS::AccountId}"
+      Tags:
+        - Key: Rule
+          Value: S3-030
+  S3030MultiStmtPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3030MultiStmt
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource:
+              - !GetAtt S3030MultiStmt.Arn
+              - !Sub "${S3030MultiStmt.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+          - Sid: AdminFullAccess
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action:
+              - s3:GetObject
+              - "*"
+            Resource:
+              - !GetAtt S3030MultiStmt.Arn
+              - !Sub "${S3030MultiStmt.Arn}/*"
+  S3030ByName:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: c2cgap-s3030-cfn-byname-306026247677
+      Tags:
+        - Key: Rule
+          Value: S3-030
+  S3030ByNamePolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: S3030ByName
+    Properties:
+      Bucket: c2cgap-s3030-cfn-byname-306026247677
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "*"
+            Resource:
+              - arn:aws:s3:::c2cgap-s3030-cfn-byname-306026247677
+              - arn:aws:s3:::c2cgap-s3030-cfn-byname-306026247677/*

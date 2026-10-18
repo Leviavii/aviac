@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3-044 variants
+Parameters:
+  LogsOwnership:
+    Type: String
+    Default: ObjectWriter
+    AllowedValues:
+      - BucketOwnerEnforced
+      - BucketOwnerPreferred
+      - ObjectWriter
+Conditions:
+  EnableAcls: !Not [!Equals [!Ref LogsOwnership, BucketOwnerEnforced]]
+Resources:
+  PreferredBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3044-preferred-${AWS::AccountId}
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      Tags:
+        - Key: Rule
+          Value: S3-044
+  LogDeliveryBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3044-log-delivery-${AWS::AccountId}
+      AccessControl: LogDeliveryWrite
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      Tags:
+        - Key: Rule
+          Value: S3-044
+  ParamOwnerBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3044-param-owner-${AWS::AccountId}
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: !Ref LogsOwnership
+      Tags:
+        - Key: Rule
+          Value: S3-044
+  DefaultsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3044-defaults-${AWS::AccountId}
+      Tags:
+        - Key: Rule
+          Value: S3-044
+  CondOwnerBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3044-cond-owner-${AWS::AccountId}
+      AccessControl: !If [EnableAcls, LogDeliveryWrite, !Ref AWS::NoValue]
+      OwnershipControls: !If
+        - EnableAcls
+        - Rules:
+            - ObjectOwnership: !Ref LogsOwnership
+        - !Ref AWS::NoValue
+      Tags:
+        - Key: Rule
+          Value: S3-044

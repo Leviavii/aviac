@@ -1,0 +1,236 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-012 variants
+Resources:
+  RestApiExplicitFalseApigwCwRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway012-cfn-apigw-cwlogs
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiExplicitFalseApigwAccount:
+    Type: AWS::ApiGateway::Account
+    DependsOn: RestApiExplicitFalse
+    Properties:
+      CloudWatchRoleArn: !GetAtt RestApiExplicitFalseApigwCwRole.Arn
+  RestApiExplicitFalse:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-explicitfalse
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiExplicitFalseMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiExplicitFalse
+      ResourceId: !GetAtt RestApiExplicitFalse.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiExplicitFalseDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestApiExplicitFalseMethod
+    Properties:
+      RestApiId: !Ref RestApiExplicitFalse
+  RestApiExplicitFalseStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: RestApiExplicitFalseApigwAccount
+    Properties:
+      StageName: prod
+      RestApiId: !Ref RestApiExplicitFalse
+      DeploymentId: !Ref RestApiExplicitFalseDeployment
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: false
+          LoggingLevel: INFO
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiNoMethodSettings:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-nomethodsettings
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiNoMethodSettingsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiNoMethodSettings
+      ResourceId: !GetAtt RestApiNoMethodSettings.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiNoMethodSettingsDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestApiNoMethodSettingsMethod
+    Properties:
+      RestApiId: !Ref RestApiNoMethodSettings
+  RestApiNoMethodSettingsStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: prod
+      RestApiId: !Ref RestApiNoMethodSettings
+      DeploymentId: !Ref RestApiNoMethodSettingsDeployment
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiMetricsOmitted:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-metricsomitted
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiMetricsOmittedMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiMetricsOmitted
+      ResourceId: !GetAtt RestApiMetricsOmitted.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiMetricsOmittedDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestApiMetricsOmittedMethod
+    Properties:
+      RestApiId: !Ref RestApiMetricsOmitted
+  RestApiMetricsOmittedStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: RestApiExplicitFalseApigwAccount
+    Properties:
+      StageName: prod
+      RestApiId: !Ref RestApiMetricsOmitted
+      DeploymentId: !Ref RestApiMetricsOmittedDeployment
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          LoggingLevel: INFO
+          DataTraceEnabled: false
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiDeployNoDesc:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-deploynodesc
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiDeployNoDescMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiDeployNoDesc
+      ResourceId: !GetAtt RestApiDeployNoDesc.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiDeployNoDescDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestApiDeployNoDescMethod
+    Properties:
+      RestApiId: !Ref RestApiDeployNoDesc
+      StageName: prod
+  RestApiDeployDescFalse:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-deploydescfalse
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiDeployDescFalseMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiDeployDescFalse
+      ResourceId: !GetAtt RestApiDeployDescFalse.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiDeployDescFalseDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - RestApiDeployDescFalseMethod
+      - RestApiExplicitFalseApigwAccount
+    Properties:
+      RestApiId: !Ref RestApiDeployDescFalse
+      StageName: prod
+      StageDescription:
+        MetricsEnabled: false
+        LoggingLevel: INFO
+  RestApiQuotedFalse:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-quotedfalse
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiQuotedFalseMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiQuotedFalse
+      ResourceId: !GetAtt RestApiQuotedFalse.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiQuotedFalseDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestApiQuotedFalseMethod
+    Properties:
+      RestApiId: !Ref RestApiQuotedFalse
+  RestApiQuotedFalseStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: prod
+      RestApiId: !Ref RestApiQuotedFalse
+      DeploymentId: !Ref RestApiQuotedFalseDeployment
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: "false"
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiDeployDescOmitted:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway012-cfn-deploydescomitted
+      Tags:
+        - Key: Rule
+          Value: APIGateway-012
+  RestApiDeployDescOmittedMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestApiDeployDescOmitted
+      ResourceId: !GetAtt RestApiDeployDescOmitted.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestApiDeployDescOmittedDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - RestApiDeployDescOmittedMethod
+      - RestApiExplicitFalseApigwAccount
+    Properties:
+      RestApiId: !Ref RestApiDeployDescOmitted
+      StageName: prod
+      StageDescription:
+        LoggingLevel: INFO
+        DataTraceEnabled: false

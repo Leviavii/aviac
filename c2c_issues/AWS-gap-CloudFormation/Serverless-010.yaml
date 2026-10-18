@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless-010 variants - Lambda functions with environment variables and no customer managed KMS key
+Parameters:
+  FunctionKmsKeyArn:
+    Type: String
+    Default: ''
+Conditions:
+  HasFunctionKmsKey: !Not [!Equals [!Ref FunctionKmsKeyArn, '']]
+Globals:
+  Function:
+    Environment:
+      Variables:
+        LOG_LEVEL: info
+Resources:
+  Sl010LambdaDefault:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-sl010-cfn-lambda-default
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt Sl010ExecRole.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return "ok"
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+      Tags:
+        - Key: Rule
+          Value: Serverless-010
+  Sl010LambdaEmpty:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-sl010-cfn-lambda-empty
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt Sl010ExecRole.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return "ok"
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+      KmsKeyArn: ''
+      Tags:
+        - Key: Rule
+          Value: Serverless-010
+  Sl010LambdaCond:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-sl010-cfn-lambda-cond
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt Sl010ExecRole.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return "ok"
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+      KmsKeyArn: !If [HasFunctionKmsKey, !Ref FunctionKmsKeyArn, !Ref 'AWS::NoValue']
+      Tags:
+        - Key: Rule
+          Value: Serverless-010
+  Sl010LambdaParam:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-sl010-cfn-lambda-param
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt Sl010ExecRole.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return "ok"
+      Environment:
+        Variables:
+          LOG_LEVEL: info
+      KmsKeyArn: !Ref FunctionKmsKeyArn
+      Tags:
+        - Key: Rule
+          Value: Serverless-010
+  Sl010SamDefault:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: c2cgap-sl010-cfn-sam-default
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt Sl010ExecRole.Arn
+      InlineCode: |
+        def handler(event, context):
+            return "ok"
+      Environment:
+        Variables:
+          APP_MODE: prod
+      Tags:
+        Rule: Serverless-010
+  Sl010SamGlobals:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: c2cgap-sl010-cfn-sam-globals
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt Sl010ExecRole.Arn
+      InlineCode: |
+        def handler(event, context):
+            return "ok"
+      Tags:
+        Rule: Serverless-010
+  Sl010ExecRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-sl010-cfn-exec-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Tags:
+        - Key: Rule
+          Value: Serverless-010

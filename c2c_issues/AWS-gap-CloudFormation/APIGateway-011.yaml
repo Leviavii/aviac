@@ -1,0 +1,272 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-011 variants
+Resources:
+  RestOffExplicit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway011-rest-off-explicit
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestOffExplicitMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestOffExplicit
+      ResourceId: !GetAtt RestOffExplicit.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestOffExplicitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestOffExplicitMethod
+    Properties:
+      RestApiId: !Ref RestOffExplicit
+  RestOffExplicitStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestOffExplicit
+      DeploymentId: !Ref RestOffExplicitDeployment
+      StageName: prod
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          LoggingLevel: "OFF"
+          MetricsEnabled: true
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestMetricsOnly:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway011-rest-metrics-only
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestMetricsOnlyMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestMetricsOnly
+      ResourceId: !GetAtt RestMetricsOnly.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestMetricsOnlyDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestMetricsOnlyMethod
+    Properties:
+      RestApiId: !Ref RestMetricsOnly
+  RestMetricsOnlyStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestMetricsOnly
+      DeploymentId: !Ref RestMetricsOnlyDeployment
+      StageName: prod
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          MetricsEnabled: true
+          ThrottlingRateLimit: 100
+          ThrottlingBurstLimit: 50
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestMixedOverride:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway011-rest-mixed-override
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestMixedOverrideHealth:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref RestMixedOverride
+      ParentId: !GetAtt RestMixedOverride.RootResourceId
+      PathPart: health
+  RestMixedOverrideMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestMixedOverride
+      ResourceId: !Ref RestMixedOverrideHealth
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestMixedOverrideDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestMixedOverrideMethod
+    Properties:
+      RestApiId: !Ref RestMixedOverride
+  RestMixedOverrideCwRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway011-rest-mixed-override-apigw-cw
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestMixedOverrideAccount:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt RestMixedOverrideCwRole.Arn
+  RestMixedOverrideStage:
+    Type: AWS::ApiGateway::Stage
+    DependsOn: RestMixedOverrideAccount
+    Properties:
+      RestApiId: !Ref RestMixedOverride
+      DeploymentId: !Ref RestMixedOverrideDeployment
+      StageName: prod
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          LoggingLevel: INFO
+        - HttpMethod: GET
+          ResourcePath: "/health"
+          LoggingLevel: "OFF"
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestNoMethodSettings:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway011-rest-no-method-settings
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestNoMethodSettingsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestNoMethodSettings
+      ResourceId: !GetAtt RestNoMethodSettings.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestNoMethodSettingsDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestNoMethodSettingsMethod
+    Properties:
+      RestApiId: !Ref RestNoMethodSettings
+  RestNoMethodSettingsStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestNoMethodSettings
+      DeploymentId: !Ref RestNoMethodSettingsDeployment
+      StageName: prod
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestDeployStageOff:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway011-rest-deploy-stage-off
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestDeployStageOffMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestDeployStageOff
+      ResourceId: !GetAtt RestDeployStageOff.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestDeployStageOffDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestDeployStageOffMethod
+    Properties:
+      RestApiId: !Ref RestDeployStageOff
+      StageName: prod
+      StageDescription:
+        LoggingLevel: "OFF"
+        MetricsEnabled: true
+  RestDeployStageDefault:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway011-rest-deploy-stage-default
+      Tags:
+        - Key: Rule
+          Value: APIGateway-011
+  RestDeployStageDefaultMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestDeployStageDefault
+      ResourceId: !GetAtt RestDeployStageDefault.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestDeployStageDefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestDeployStageDefaultMethod
+    Properties:
+      RestApiId: !Ref RestDeployStageDefault
+      StageName: prod
+  WsOffExplicit:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: c2cgap-apigateway011-ws-off-explicit
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: "$request.body.action"
+      Tags:
+        Rule: APIGateway-011
+  WsOffExplicitIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WsOffExplicit
+      IntegrationType: MOCK
+  WsOffExplicitRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WsOffExplicit
+      RouteKey: "$default"
+      Target: !Sub "integrations/${WsOffExplicitIntegration}"
+  WsOffExplicitStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref WsOffExplicit
+      StageName: prod
+      AutoDeploy: true
+      DefaultRouteSettings:
+        LoggingLevel: "OFF"
+        DetailedMetricsEnabled: true
+      Tags:
+        Rule: APIGateway-011
+  WsNoRouteSettings:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: c2cgap-apigateway011-ws-no-route-settings
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: "$request.body.action"
+      Tags:
+        Rule: APIGateway-011
+  WsNoRouteSettingsIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WsNoRouteSettings
+      IntegrationType: MOCK
+  WsNoRouteSettingsRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WsNoRouteSettings
+      RouteKey: "$default"
+      Target: !Sub "integrations/${WsNoRouteSettingsIntegration}"
+  WsNoRouteSettingsStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref WsNoRouteSettings
+      StageName: prod
+      AutoDeploy: true
+      Tags:
+        Rule: APIGateway-011

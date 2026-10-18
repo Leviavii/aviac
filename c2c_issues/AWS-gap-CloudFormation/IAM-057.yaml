@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-057 versions
+Parameters:
+  TrustedAccountId:
+    Type: String
+    Default: "444455556666"
+Resources:
+  ExplicitRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-explicit-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::444455556666:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap
+  SubPrincipalRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-sub-principal-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${TrustedAccountId}:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap
+  RefPrincipalRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-ref-principal-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref TrustedAccountId
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap
+  JoinPrincipalRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-join-principal-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Join ["", ["arn:aws:iam::", !Ref TrustedAccountId, ":root"]]
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap
+  StsWildcardRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-sts-wildcard-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::444455556666:root
+            Action: sts:*
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap
+  PartitionSubRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-partition-sub-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:${AWS::Partition}:iam::444455556666:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap
+  BareAccountRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam057-bare-account-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: "444455556666"
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057
+        - Key: Project
+          Value: wiz-c2c-gap

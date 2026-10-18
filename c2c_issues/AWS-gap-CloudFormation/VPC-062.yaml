@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: c2cgap VPC-062 security group all ports ingress test versions
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0b6352d73ace64d6b
+Resources:
+  Vpc062PublicAllTraffic:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-public-all-traffic
+      GroupDescription: All traffic from anywhere
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062TcpAllPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-tcp-all-ports
+      GroupDescription: All TCP ports from anywhere
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062PrivateCidr:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-private-cidr
+      GroupDescription: All TCP ports from the internal network
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 10.0.0.0/8
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062SourceSgSource:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-source-sg-source
+      GroupDescription: Source security group for Vpc062SourceSg
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062SourceSg:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-source-sg
+      GroupDescription: All traffic from the load balancer security group
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          SourceSecurityGroupId: !GetAtt Vpc062SourceSgSource.GroupId
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062Separate:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-separate
+      GroupDescription: Rules managed separately
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062SeparateIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !GetAtt Vpc062Separate.GroupId
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      CidrIp: 0.0.0.0/0
+  Vpc062MinusOnePorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-minus-one-ports
+      GroupDescription: All traffic from anywhere with -1 ports
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-062
+  Vpc062QuotedPorts:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc062-quoted-ports
+      GroupDescription: All TCP ports from anywhere with quoted ports
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "0"
+          ToPort: "65535"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-062

@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: c2cgap VPC-086 security group egress port range test versions
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0b6352d73ace64d6b
+Resources:
+  SgInlineRange:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc086-sg-inline-range
+      GroupDescription: Inline outbound TCP port range
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-086
+  SgInlineAll:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc086-sg-inline-all
+      GroupDescription: Inline outbound all protocols
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-086
+  SgNoEgress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc086-sg-no-egress
+      GroupDescription: No outbound rules set so default allow-all applies
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-086
+  SgSepRange:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc086-sg-sep-range
+      GroupDescription: Outbound via separate resource port range
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-086
+  SgSepRangeEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt SgSepRange.GroupId
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      CidrIp: 0.0.0.0/0
+  SgSepAll:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc086-sg-sep-all
+      GroupDescription: Outbound via separate resource all protocols
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-086
+  SgSepAllEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt SgSepAll.GroupId
+      IpProtocol: "-1"
+      CidrIp: 10.0.0.0/16

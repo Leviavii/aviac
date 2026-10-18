@@ -1,0 +1,168 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-146 variants
+Parameters:
+  Iam146HSubParamRootTrustedAccountId:
+    Type: String
+    Default: "306026247677"
+Resources:
+  Iam146ARootArn:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-a-root-arn
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: arn:aws:iam::306026247677:root
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146BAccountId:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-b-account-id
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: "306026247677"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146CAwsWildcard:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-c-aws-wildcard
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: "*"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146DPrincipalStar:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-d-principal-star
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal: "*"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146ESubAccountRoot:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-e-sub-account-root
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146FRefAccountId:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-f-ref-account-id
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: !Ref AWS::AccountId
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146GJoinRoot:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-g-join-root
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: !Join ["", ["arn:aws:iam::", !Ref "AWS::AccountId", ":root"]]
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146HSubParamRoot:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-h-sub-param-root
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: !Sub "arn:aws:iam::${Iam146HSubParamRootTrustedAccountId}:root"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146ISubPartitionRoot:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-i-sub-partition-root
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS: !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:root"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146JJoinPartitionRoot:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-j-join-partition-root
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS:
+                Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":iam::"
+                    - Ref: AWS::AccountId
+                    - ":root"
+      Tags:
+        - Key: Rule
+          Value: IAM-146
+  Iam146KArrayRoot:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam146-cfn-k-array-root
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Principal:
+              AWS:
+                - arn:aws:iam::306026247677:root
+      Tags:
+        - Key: Rule
+          Value: IAM-146

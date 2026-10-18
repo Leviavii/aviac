@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3-045 variants
+Parameters:
+  PartnerAccountId:
+    Type: String
+    Default: "033677994240"
+Resources:
+  PublicBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3045-public-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+      Tags:
+        - Key: Rule
+          Value: S3-045
+  PublicBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PublicBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PublicRead
+            Effect: Allow
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Sub "arn:aws:s3:::c2cgap-s3045-public-${AWS::AccountId}/*"
+  CrossBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3045-cross-${AWS::AccountId}
+      Tags:
+        - Key: Rule
+          Value: S3-045
+  CrossBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CrossBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: CrossAccountWrite
+            Effect: Allow
+            Principal:
+              AWS: "arn:aws:iam::033677994240:root"
+            Action:
+              - "s3:PutObject"
+              - "s3:GetObject"
+            Resource: !Sub "${CrossBucket.Arn}/*"
+  SubBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3045-sub-${AWS::AccountId}
+      Tags:
+        - Key: Rule
+          Value: S3-045
+  SubBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SubBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PartnerRead
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${PartnerAccountId}:root"
+            Action: "s3:GetObject"
+            Resource: !Sub "${SubBucket.Arn}/*"

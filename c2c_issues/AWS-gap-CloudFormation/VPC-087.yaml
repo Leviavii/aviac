@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: VPC-087 security group ingress port range versions
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0b6352d73ace64d6b
+Resources:
+  Vpc087InlineRange:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc087-inlinerange
+      GroupDescription: Inline ingress with port range
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 1024
+          ToPort: 65535
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-087
+  Vpc087InlineAll:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc087-inlineall
+      GroupDescription: Inline ingress all traffic
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-087
+  Vpc087SepRange:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc087-seprange
+      GroupDescription: Separate ingress resource with port range
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-087
+  Vpc087SepRangeIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !GetAtt Vpc087SepRange.GroupId
+      IpProtocol: tcp
+      FromPort: 1024
+      ToPort: 65535
+      CidrIp: 10.0.0.0/16
+  Vpc087SepAll:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc087-sepall
+      GroupDescription: Separate ingress resource all traffic
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-087
+  Vpc087SepAllIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !GetAtt Vpc087SepAll.GroupId
+      IpProtocol: "-1"
+      CidrIp: 10.0.0.0/16
+  Vpc087AllMinusOne:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc087-allminusone
+      GroupDescription: Inline all traffic with ports set to -1
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-087
+  Vpc087AllZeroTo65535:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc087-allzeroto65535
+      GroupDescription: Inline all traffic with ports 0-65535
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-087

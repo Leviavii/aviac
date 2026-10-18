@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  Apigw015Explicit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway015-explicit
+      Tags:
+        - Key: Rule
+          Value: APIGateway-015
+  Apigw015ExplicitGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Apigw015Explicit
+      ResourceId: !GetAtt Apigw015Explicit.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  Apigw015ExplicitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: Apigw015ExplicitGet
+    Properties:
+      RestApiId: !Ref Apigw015Explicit
+  Apigw015ExplicitStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref Apigw015Explicit
+      DeploymentId: !Ref Apigw015ExplicitDeployment
+      StageName: prod
+      CacheClusterEnabled: false
+      Tags:
+        - Key: Rule
+          Value: APIGateway-015
+  Apigw015Default:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway015-default
+      Tags:
+        - Key: Rule
+          Value: APIGateway-015
+  Apigw015DefaultGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Apigw015Default
+      ResourceId: !GetAtt Apigw015Default.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  Apigw015DefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: Apigw015DefaultGet
+    Properties:
+      RestApiId: !Ref Apigw015Default
+  Apigw015DefaultStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref Apigw015Default
+      DeploymentId: !Ref Apigw015DefaultDeployment
+      StageName: prod
+      Tags:
+        - Key: Rule
+          Value: APIGateway-015
+  Apigw015DeployImplicit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway015-deploy-implicit
+      Tags:
+        - Key: Rule
+          Value: APIGateway-015
+  Apigw015DeployImplicitGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Apigw015DeployImplicit
+      ResourceId: !GetAtt Apigw015DeployImplicit.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  Apigw015DeployImplicitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: Apigw015DeployImplicitGet
+    Properties:
+      RestApiId: !Ref Apigw015DeployImplicit
+      StageName: prod
+  Apigw015DeployExplicit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway015-deploy-explicit
+      Tags:
+        - Key: Rule
+          Value: APIGateway-015
+  Apigw015DeployExplicitGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Apigw015DeployExplicit
+      ResourceId: !GetAtt Apigw015DeployExplicit.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  Apigw015DeployExplicitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: Apigw015DeployExplicitGet
+    Properties:
+      RestApiId: !Ref Apigw015DeployExplicit
+      StageName: prod
+      StageDescription:
+        CacheClusterEnabled: false
