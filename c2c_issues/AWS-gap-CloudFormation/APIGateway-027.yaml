@@ -1,0 +1,308 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-027 variants - REST API reachable via custom domain with non-PQC security policy
+Resources:
+  ApiExplicit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway-027-explicit
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  ApiExplicitMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiExplicit
+      ResourceId: !GetAtt ApiExplicit.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiExplicitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiExplicitMethod
+    Properties:
+      RestApiId: !Ref ApiExplicit
+      StageName: prod
+  ApiExplicitCert:
+    Type: Custom::C2cGapCert
+    Properties:
+      ServiceToken: !GetAtt C2cGapCertFn.Arn
+      Kind: cert
+      DomainName: c2cgap-apigateway-027-explicit.example.com
+      Rule: APIGateway-027
+  ApiExplicitDomain:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      DomainName: c2cgap-apigateway-027-explicit.example.com
+      RegionalCertificateArn: !GetAtt ApiExplicitCert.Arn
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      SecurityPolicy: TLS_1_2
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  ApiExplicitMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: ApiExplicitDeployment
+    Properties:
+      DomainName: !Ref ApiExplicitDomain
+      RestApiId: !Ref ApiExplicit
+      Stage: prod
+  ApiNoPolicy:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway-027-nopolicy
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  ApiNoPolicyMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiNoPolicy
+      ResourceId: !GetAtt ApiNoPolicy.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiNoPolicyDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiNoPolicyMethod
+    Properties:
+      RestApiId: !Ref ApiNoPolicy
+      StageName: prod
+  ApiNoPolicyCert:
+    Type: Custom::C2cGapCert
+    Properties:
+      ServiceToken: !GetAtt C2cGapCertFn.Arn
+      Kind: cert
+      DomainName: c2cgap-apigateway-027-nopolicy.example.com
+      Rule: APIGateway-027
+  ApiNoPolicyDomain:
+    Type: AWS::ApiGateway::DomainName
+    Properties:
+      DomainName: c2cgap-apigateway-027-nopolicy.example.com
+      RegionalCertificateArn: !GetAtt ApiNoPolicyCert.Arn
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  ApiNoPolicyMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: ApiNoPolicyDeployment
+    Properties:
+      DomainName: !Ref ApiNoPolicyDomain
+      RestApiId: !Ref ApiNoPolicy
+      Stage: prod
+  ApiV2Domain:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway-027-v2domain
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  ApiV2DomainMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiV2Domain
+      ResourceId: !GetAtt ApiV2Domain.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiV2DomainDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiV2DomainMethod
+    Properties:
+      RestApiId: !Ref ApiV2Domain
+      StageName: prod
+  ApiV2DomainCert:
+    Type: Custom::C2cGapCert
+    Properties:
+      ServiceToken: !GetAtt C2cGapCertFn.Arn
+      Kind: cert
+      DomainName: c2cgap-apigateway-027-v2domain.example.com
+      Rule: APIGateway-027
+  ApiV2DomainName:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: c2cgap-apigateway-027-v2domain.example.com
+      DomainNameConfigurations:
+        - CertificateArn: !GetAtt ApiV2DomainCert.Arn
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+      Tags:
+        Rule: APIGateway-027
+  ApiV2DomainMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    DependsOn: ApiV2DomainDeployment
+    Properties:
+      DomainName: !Ref ApiV2DomainName
+      ApiId: !Ref ApiV2Domain
+      Stage: prod
+  ApiSharedDomain:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway-027-shareddomain
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  ApiSharedDomainMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ApiSharedDomain
+      ResourceId: !GetAtt ApiSharedDomain.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  ApiSharedDomainDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiSharedDomainMethod
+    Properties:
+      RestApiId: !Ref ApiSharedDomain
+      StageName: prod
+  ApiSharedDomainCert:
+    Type: Custom::C2cGapCert
+    Properties:
+      ServiceToken: !GetAtt C2cGapCertFn.Arn
+      Kind: cert
+      DomainName: c2cgap-apigateway-027-shared.example.com
+      Rule: APIGateway-027
+  ApiSharedDomainExternal:
+    Type: Custom::C2cGapDomain
+    Properties:
+      ServiceToken: !GetAtt C2cGapCertFn.Arn
+      Kind: domain
+      DomainName: c2cgap-apigateway-027-shared.example.com
+      CertificateArn: !GetAtt ApiSharedDomainCert.Arn
+      SecurityPolicy: TLS_1_2
+      Rule: APIGateway-027
+  ApiSharedDomainMapping:
+    Type: AWS::ApiGateway::BasePathMapping
+    DependsOn: ApiSharedDomainDeployment
+    Properties:
+      DomainName: !GetAtt ApiSharedDomainExternal.DomainName
+      RestApiId: !Ref ApiSharedDomain
+      BasePath: orders
+      Stage: prod
+  C2cGapCertFnLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/c2cgap-apigateway-027-certfn
+      RetentionInDays: 1
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  C2cGapCertFnRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway-027-certfn-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: c2cgap-apigateway-027-certfn
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt C2cGapCertFnLogGroup.Arn
+              - Effect: Allow
+                Action:
+                  - acm:ImportCertificate
+                  - acm:AddTagsToCertificate
+                  - acm:DeleteCertificate
+                  - acm:DescribeCertificate
+                  - acm:ListCertificates
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - apigateway:GET
+                  - apigateway:POST
+                  - apigateway:PUT
+                  - apigateway:PATCH
+                  - apigateway:DELETE
+                Resource:
+                  - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}::/domainnames
+                  - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}::/domainnames/*
+                  - !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}::/tags/*
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+  C2cGapCertFn:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-apigateway-027-certfn
+      Runtime: nodejs22.x
+      Handler: index.handler
+      Role: !GetAtt C2cGapCertFnRole.Arn
+      Timeout: 900
+      MemorySize: 256
+      LoggingConfig:
+        LogGroup: !Ref C2cGapCertFnLogGroup
+      Tags:
+        - Key: Rule
+          Value: APIGateway-027
+      Code:
+        ZipFile: |
+          const c=require('crypto'),A=require('@aws-sdk/client-acm'),G=require('@aws-sdk/client-api-gateway');
+          const acm=new A.ACMClient({}),gw=new G.APIGatewayClient({});
+          const L=n=>n<128?[n]:n<256?[129,n]:[130,n>>8,n&255];
+          const T=(t,...p)=>{const b=Buffer.concat(p.map(x=>Buffer.from(x)));return Buffer.concat([Buffer.from([t,...L(b.length)]),b])};
+          const Q=(...p)=>T(48,...p);
+          const O=s=>{const a=s.split('.').map(Number),o=[40*a[0]+a[1]];for(const n of a.slice(2)){const t=[n&127];let v=n>>7;while(v){t.unshift(v&127|128);v>>=7}o.push(...t)}return T(6,o)};
+          const N=cn=>Q(T(49,Q(O('2.5.4.3'),T(12,cn))));
+          const U=d=>T(23,d.toISOString().replace(/[-:T]/g,'').slice(2,14)+'Z');
+          const W=ms=>new Promise(r=>setTimeout(r,ms));
+          function mk(cn){
+            const {publicKey:pub,privateKey:k}=c.generateKeyPairSync('rsa',{modulusLength:2048});
+            const sa=Q(O('1.2.840.113549.1.1.11'),T(5)),s=c.randomBytes(8),now=Date.now();s[0]=s[0]&127|64;
+            const tbs=Q(T(160,T(2,[2])),T(2,s),sa,N(cn),Q(U(new Date(now-864e5)),U(new Date(now+3650*864e5))),N(cn),pub.export({type:'spki',format:'der'}),
+              T(163,Q(Q(O('2.5.29.19'),T(4,Q())),Q(O('2.5.29.15'),T(1,[255]),T(4,T(3,[5,160]))),Q(O('2.5.29.37'),T(4,Q(O('1.3.6.1.5.5.7.3.1')))),Q(O('2.5.29.17'),T(4,Q(T(130,cn)))))));
+            const der=Q(tbs,sa,T(3,Buffer.concat([Buffer.from([0]),c.sign('sha256',tbs,k)])));
+            return {Certificate:Buffer.from('-----BEGIN CERTIFICATE-----\n'+der.toString('base64').match(/.{1,64}/g).join('\n')+'\n-----END CERTIFICATE-----\n'),PrivateKey:Buffer.from(k.export({type:'pkcs1',format:'pem'}))};
+          }
+          async function run(e){
+            const p=e.ResourceProperties,o=e.PhysicalResourceId||'',d=e.RequestType=='Delete';
+            if(p.Kind=='cert'){
+              if(d){
+                if(o.startsWith('arn:'))for(let i=0;;i++){try{await acm.send(new A.DeleteCertificateCommand({CertificateArn:o}));break}catch(x){if(x.name=='ResourceNotFoundException')break;if(x.name!='ResourceInUseException'||i>70)throw x;await W(1e4)}}
+                return [o,{}];
+              }
+              const r=await acm.send(new A.ImportCertificateCommand({...mk(p.DomainName),Tags:[{Key:'Rule',Value:p.Rule},{Key:'Name',Value:p.DomainName}]}));
+              return [r.CertificateArn,{Arn:r.CertificateArn}];
+            }
+            if(d){
+              if(o.includes('.'))try{await gw.send(new G.DeleteDomainNameCommand({domainName:o}))}catch(x){if(x.name!='NotFoundException')throw x}
+              return [o,{}];
+            }
+            if(o!=p.DomainName)await gw.send(new G.CreateDomainNameCommand({domainName:p.DomainName,regionalCertificateArn:p.CertificateArn,endpointConfiguration:{types:['REGIONAL']},securityPolicy:p.SecurityPolicy,tags:{Rule:p.Rule}}));
+            return [p.DomainName,{DomainName:p.DomainName}];
+          }
+          exports.handler=async(e,ctx)=>{
+            let s='SUCCESS',id,data={},why='';
+            try{[id,data]=await run(e)}catch(x){s='FAILED';why=String(x);id=e.PhysicalResourceId||ctx.logStreamName}
+            await fetch(e.ResponseURL,{method:'PUT',headers:{'content-type':''},body:JSON.stringify({Status:s,Reason:why+' See '+ctx.logStreamName,PhysicalResourceId:id,StackId:e.StackId,RequestId:e.RequestId,LogicalResourceId:e.LogicalResourceId,Data:data})});
+          };

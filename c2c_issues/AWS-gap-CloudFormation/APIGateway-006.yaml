@@ -1,0 +1,136 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-006 variants
+Resources:
+  RestSplit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway006-cfn-restsplit
+      Tags:
+        - Key: Rule
+          Value: APIGateway-006
+  RestSplitResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref RestSplit
+      ParentId: !GetAtt RestSplit.RootResourceId
+      PathPart: items
+  RestSplitMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestSplit
+      ResourceId: !Ref RestSplitResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestSplitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestSplitMethod
+    Properties:
+      RestApiId: !Ref RestSplit
+  RestSplitStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestSplit
+      DeploymentId: !Ref RestSplitDeployment
+      StageName: prod
+      Tags:
+        - Key: Rule
+          Value: APIGateway-006
+  RestDeploy:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway006-cfn-restdeploy
+      Tags:
+        - Key: Rule
+          Value: APIGateway-006
+  RestDeployResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref RestDeploy
+      ParentId: !GetAtt RestDeploy.RootResourceId
+      PathPart: items
+  RestDeployMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestDeploy
+      ResourceId: !Ref RestDeployResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestDeployDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestDeployMethod
+    Properties:
+      RestApiId: !Ref RestDeploy
+      StageName: prod
+      StageDescription:
+        MetricsEnabled: true
+        TracingEnabled: true
+        Tags:
+          - Key: Rule
+            Value: APIGateway-006
+  WsSplit:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: c2cgap-apigateway006-cfn-wssplit
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: $request.body.action
+      Tags:
+        Rule: APIGateway-006
+  WsSplitIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WsSplit
+      IntegrationType: MOCK
+  WsSplitRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WsSplit
+      RouteKey: $default
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref WsSplitIntegration
+  WsSplitStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref WsSplit
+      StageName: prod
+      AutoDeploy: true
+      Tags:
+        Rule: APIGateway-006
+  RestBody:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway006-cfn-restbody
+      Body:
+        openapi: 3.0.1
+        info:
+          title: c2cgap-apigateway006-cfn-restbody
+          version: "1.0"
+        paths:
+          /items:
+            get:
+              x-amazon-apigateway-integration:
+                type: mock
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+      Tags:
+        - Key: Rule
+          Value: APIGateway-006
+  RestBodyDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref RestBody
+  RestBodyStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestBody
+      DeploymentId: !Ref RestBodyDeployment
+      StageName: prod
+      TracingEnabled: true
+      Tags:
+        - Key: Rule
+          Value: APIGateway-006

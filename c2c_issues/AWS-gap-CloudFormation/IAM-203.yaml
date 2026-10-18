@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-203 confused deputy variants
+Resources:
+  Iam203Inline:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam203-cfn-inline
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-203
+  Iam203SvcList:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam203-cfn-svclist
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-203
+  Iam203NoVersion:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam203-cfn-noversion
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-203
+  Iam203UrlSuffix:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam203-cfn-urlsuffix
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Join
+                - ""
+                - - ecs-tasks.
+                  - !Ref AWS::URLSuffix
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-203
+  Iam203ExtId:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam203-cfn-extid
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: "111122223333"
+      Tags:
+        - Key: Rule
+          Value: IAM-203
+  Iam203Sub:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-iam203-cfn-sub
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Sub "ecs-tasks.${AWS::URLSuffix}"
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-203

@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Certificate-012 ACM certificate key algorithm variants
+Parameters:
+  CertKeyAlgorithm:
+    Type: String
+    Default: RSA_2048
+    AllowedValues:
+      - RSA_2048
+      - EC_prime256v1
+      - EC_secp384r1
+Resources:
+  CertRsaExplicit:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: c2cgap-certificate-012-rsa.example.com
+      ValidationMethod: DNS
+      KeyAlgorithm: RSA_2048
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-012-rsa
+        - Key: Rule
+          Value: Certificate-012
+  CertEcExplicit:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: c2cgap-certificate-012-ec.example.com
+      ValidationMethod: DNS
+      KeyAlgorithm: EC_prime256v1
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-012-ec
+        - Key: Rule
+          Value: Certificate-012
+  CertDefaultAlgo:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: c2cgap-certificate-012-default.example.com
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-012-default
+        - Key: Rule
+          Value: Certificate-012
+  CertParamAlgo:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: c2cgap-certificate-012-param.example.com
+      ValidationMethod: DNS
+      KeyAlgorithm: !Ref CertKeyAlgorithm
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-012-param
+        - Key: Rule
+          Value: Certificate-012

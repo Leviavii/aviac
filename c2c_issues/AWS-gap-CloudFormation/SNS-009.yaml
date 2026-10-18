@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: SNS-009 variants
+Resources:
+  Sns009Default:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns009-cfn-default
+      Tags:
+        - Key: Rule
+          Value: SNS-009
+  Sns009Separate:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns009-cfn-separate
+      Tags:
+        - Key: Rule
+          Value: SNS-009
+  Sns009SeparatePolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref Sns009Separate
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowAccountPublish
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action:
+              - SNS:Publish
+              - SNS:Subscribe
+            Resource: !Ref Sns009Separate
+  Sns009Inline:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns009-cfn-inline
+      Tags:
+        - Key: Rule
+          Value: SNS-009
+  Sns009InlinePolicy:
+    Type: AWS::SNS::TopicInlinePolicy
+    Properties:
+      TopicArn: !Ref Sns009Inline
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowAccountPublish
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action:
+              - SNS:Publish
+              - SNS:Subscribe
+            Resource: !Ref Sns009Inline

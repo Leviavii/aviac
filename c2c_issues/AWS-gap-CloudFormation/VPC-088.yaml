@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: VPC-088 security group egress all protocols versions
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0b6352d73ace64d6b
+Resources:
+  SgInlineNumber:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc088-sginlinenumber
+      GroupDescription: inline egress IpProtocol -1 unquoted
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-088
+  SgInlineQuoted:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc088-sginlinequoted
+      GroupDescription: inline egress IpProtocol -1 quoted string
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-088
+  SgNoEgress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc088-sgnoegress
+      GroupDescription: no egress rules so AWS default allow-all egress remains
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-088
+  SgSeparate:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc088-sgseparate
+      GroupDescription: egress via separate SecurityGroupEgress resource
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-088
+  SgSeparateEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt SgSeparate.GroupId
+      IpProtocol: -1
+      CidrIp: 10.0.0.0/8

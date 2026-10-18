@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Certificate-004 ACM certificate wildcard domain name variants
+Parameters:
+  RootDomain:
+    Type: String
+    Default: c2cgap-certificate-004.com
+  CertDomainName:
+    Type: String
+    Default: "*.c2cgap-certificate-004.com"
+Resources:
+  WildcardDomainCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: "*.c2cgap-certificate-004.com"
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-004-wildcarddomain
+        - Key: Rule
+          Value: Certificate-004
+  WildcardSanCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: c2cgap-certificate-004.com
+      SubjectAlternativeNames:
+        - "*.c2cgap-certificate-004.com"
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-004-wildcardsan
+        - Key: Rule
+          Value: Certificate-004
+  SubParamCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub "*.${RootDomain}"
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-004-subparam
+        - Key: Rule
+          Value: Certificate-004
+  RefParamCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref CertDomainName
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-004-refparam
+        - Key: Rule
+          Value: Certificate-004
+  ApexWithWildcardSanCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref RootDomain
+      SubjectAlternativeNames:
+        - !Sub "*.${RootDomain}"
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-004-apexwithwildcardsan
+        - Key: Rule
+          Value: Certificate-004
+  JoinCert:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Join ["", ["*.", !Ref RootDomain]]
+      ValidationMethod: DNS
+      Tags:
+        - Key: Name
+          Value: c2cgap-certificate-004-join
+        - Key: Rule
+          Value: Certificate-004

@@ -1,0 +1,147 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-010 versions
+Resources:
+  RestStg:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway010-reststg
+      Tags:
+        - Key: Rule
+          Value: APIGateway-010
+  RestStgMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestStg
+      ResourceId: !GetAtt RestStg.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestStgDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestStgMethod
+    Properties:
+      RestApiId: !Ref RestStg
+  RestStgStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref RestStg
+      DeploymentId: !Ref RestStgDeployment
+      StageName: prod
+      Tags:
+        - Key: Rule
+          Value: APIGateway-010
+  RestDep:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway010-restdep
+      Tags:
+        - Key: Rule
+          Value: APIGateway-010
+  RestDepMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref RestDep
+      ResourceId: !GetAtt RestDep.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  RestDepDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: RestDepMethod
+    Properties:
+      RestApiId: !Ref RestDep
+      StageName: prod
+  HttpStg:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: c2cgap-apigateway010-httpstg
+      ProtocolType: HTTP
+      Tags:
+        Rule: APIGateway-010
+  HttpStgStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpStg
+      StageName: $default
+      AutoDeploy: true
+      Tags:
+        Rule: APIGateway-010
+  HttpQuickFnRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway010-httpquick-fn
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Tags:
+        - Key: Rule
+          Value: APIGateway-010
+  HttpQuickFn:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-apigateway010-httpquick-fn
+      Handler: index.handler
+      Runtime: python3.12
+      Role: !GetAtt HttpQuickFnRole.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return {"statusCode": 200, "body": "ok"}
+      Tags:
+        - Key: Rule
+          Value: APIGateway-010
+  HttpQuick:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: c2cgap-apigateway010-httpquick
+      ProtocolType: HTTP
+      Target: !GetAtt HttpQuickFn.Arn
+      Tags:
+        Rule: APIGateway-010
+  WsExecApigwCwRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway010-wsexec-apigw-cw
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+      Tags:
+        - Key: Rule
+          Value: APIGateway-010
+  WsExecApigwAccount:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt WsExecApigwCwRole.Arn
+  WsExec:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: c2cgap-apigateway010-wsexec
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: $request.body.action
+      Tags:
+        Rule: APIGateway-010
+  WsExecStage:
+    Type: AWS::ApiGatewayV2::Stage
+    DependsOn: WsExecApigwAccount
+    Properties:
+      ApiId: !Ref WsExec
+      StageName: prod
+      DefaultRouteSettings:
+        LoggingLevel: INFO
+        DataTraceEnabled: true
+      Tags:
+        Rule: APIGateway-010

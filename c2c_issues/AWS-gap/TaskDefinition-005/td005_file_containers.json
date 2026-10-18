@@ -1,0 +1,9 @@
+[
+  {
+    "name": "app",
+    "image": "public.ecr.aws/docker/library/busybox:latest",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true
+  }
+]

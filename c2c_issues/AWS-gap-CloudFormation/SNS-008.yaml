@@ -1,0 +1,134 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SNS-008 variants - topics that end up with confirmed subscribers
+Resources:
+  Sns008Inline:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns008-cfn-inline
+      Subscription:
+        - Protocol: sqs
+          Endpoint: !GetAtt Sns008InlineQueue.Arn
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008InlineQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: c2cgap-sns008-cfn-inline-queue
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubRef:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns008-cfn-sub-ref
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubRefQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: c2cgap-sns008-cfn-sub-ref-queue
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubRefSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref Sns008SubRef
+      Protocol: sqs
+      Endpoint: !GetAtt Sns008SubRefQueue.Arn
+  Sns008SubGetAtt:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns008-cfn-sub-getatt
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubGetAttQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: c2cgap-sns008-cfn-sub-getatt-queue
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubGetAttSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !GetAtt Sns008SubGetAtt.TopicArn
+      Protocol: sqs
+      Endpoint: !GetAtt Sns008SubGetAttQueue.Arn
+  Sns008SubArn:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns008-cfn-sub-arn
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubArnQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: c2cgap-sns008-cfn-sub-arn-queue
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SubArnSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn: Sns008SubArn
+    Properties:
+      TopicArn: !Sub "arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:c2cgap-sns008-cfn-sub-arn"
+      Protocol: sqs
+      Endpoint: !GetAtt Sns008SubArnQueue.Arn
+  Sns008Exported:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns008-cfn-exported
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SamEvent:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: c2cgap-sns008-cfn-sam-event
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SamEventRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-sns008-cfn-sam-event-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Tags:
+        - Key: Rule
+          Value: SNS-008
+  Sns008SamEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: c2cgap-sns008-cfn-sam-event
+      Role: !GetAtt Sns008SamEventRole.Arn
+      Runtime: python3.12
+      Handler: index.handler
+      InlineCode: |
+        def handler(event, context):
+            return None
+      Events:
+        TopicEvent:
+          Type: SNS
+          Properties:
+            Topic: !Ref Sns008SamEvent
+      Tags:
+        Rule: SNS-008
+Outputs:
+  Sns008ExportedArn:
+    Value: !Ref Sns008Exported
+    Export:
+      Name: c2cgap-sns008-cfn-exported-topic-arn

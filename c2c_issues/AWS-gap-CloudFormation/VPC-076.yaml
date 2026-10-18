@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: c2cgap VPC-076 security group rules without description test versions
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0b6352d73ace64d6b
+Resources:
+  VPC076Inline:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc076-cfn-inline
+      GroupDescription: Web servers
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 10.0.0.0/16
+      SecurityGroupEgress:
+        - Description: All outbound
+          IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-076
+  VPC076DefaultEgress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc076-cfn-defaultegress
+      GroupDescription: App servers
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - Description: HTTPS from VPC
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-076
+  VPC076SepIngress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc076-cfn-sepingress
+      GroupDescription: API servers
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - Description: All outbound
+          IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-076
+  VPC076SepIngressHttps:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref VPC076SepIngress
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 10.0.0.0/16
+  VPC076SepEgress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc076-cfn-sepegress
+      GroupDescription: Worker nodes
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-076
+  VPC076SepEgressHttps:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt VPC076SepEgress.GroupId
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 0.0.0.0/0
+  VPC076EgressInline:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc076-cfn-egressinline
+      GroupDescription: Batch workers
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - Description: HTTPS from VPC
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 10.0.0.0/16
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-076
+  VPC076Bare:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc076-cfn-bare
+      GroupDescription: Placeholder group
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-076

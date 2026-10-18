@@ -1,0 +1,232 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: APIGateway-009 request validator variants
+Resources:
+  Apigw009Body:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway009-cfn-body
+      Body:
+        openapi: "3.0.1"
+        info:
+          title: c2cgap-apigateway009-cfn-body
+          version: "1.0"
+        paths:
+          /items:
+            get:
+              parameters:
+                - name: id
+                  in: query
+                  required: true
+                  schema:
+                    type: string
+              x-amazon-apigateway-integration:
+                type: HTTP_PROXY
+                httpMethod: GET
+                uri: https://example.com/items
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009BodyS3:
+    Type: AWS::ApiGateway::RestApi
+    DependsOn: Apigw009BodyS3Spec
+    Properties:
+      Name: c2cgap-apigateway009-cfn-body-s3
+      BodyS3Location:
+        Bucket: !Ref Apigw009BodyS3Bucket
+        Key: openapi.yaml
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009BodyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-apigateway009-cfn-specs-${AWS::AccountId}
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009BodyS3SpecRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway009-cfn-spec-writer
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: c2cgap-apigateway009-cfn-spec-writer
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub ${Apigw009BodyS3Bucket.Arn}/*
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009BodyS3SpecFnLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/c2cgap-apigateway009-cfn-spec-writer
+      RetentionInDays: 1
+  Apigw009BodyS3SpecFn:
+    Type: AWS::Lambda::Function
+    DependsOn: Apigw009BodyS3SpecFnLogs
+    Properties:
+      FunctionName: c2cgap-apigateway009-cfn-spec-writer
+      Runtime: python3.12
+      Handler: index.handler
+      Timeout: 60
+      Role: !GetAtt Apigw009BodyS3SpecRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import urllib.request
+          import boto3
+
+          def send(event, context, status, pid, reason=""):
+              body = json.dumps({
+                  "Status": status,
+                  "Reason": reason or ("See log stream " + context.log_stream_name),
+                  "PhysicalResourceId": pid,
+                  "StackId": event["StackId"],
+                  "RequestId": event["RequestId"],
+                  "LogicalResourceId": event["LogicalResourceId"],
+                  "Data": {},
+              }).encode()
+              req = urllib.request.Request(event["ResponseURL"], data=body, method="PUT",
+                                           headers={"Content-Type": "", "Content-Length": str(len(body))})
+              urllib.request.urlopen(req, timeout=30)
+
+          def handler(event, context):
+              props = event["ResourceProperties"]
+              s3 = boto3.client("s3")
+              if event["RequestType"] == "Delete":
+                  pid = event["PhysicalResourceId"]
+                  try:
+                      bucket, key = pid.split("/", 1)
+                      s3.delete_object(Bucket=bucket, Key=key)
+                  except Exception as e:
+                      print(e)
+                  send(event, context, "SUCCESS", pid)
+                  return
+              pid = props["Bucket"] + "/" + props["Key"]
+              try:
+                  s3.put_object(Bucket=props["Bucket"], Key=props["Key"], Body=props["Content"].encode())
+                  send(event, context, "SUCCESS", pid)
+              except Exception as e:
+                  send(event, context, "FAILED", pid, str(e)[:200])
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009BodyS3Spec:
+    Type: Custom::S3Object
+    Properties:
+      ServiceToken: !GetAtt Apigw009BodyS3SpecFn.Arn
+      Bucket: !Ref Apigw009BodyS3Bucket
+      Key: openapi.yaml
+      Content: |
+        openapi: "3.0.1"
+        info:
+          title: c2cgap-apigateway009-cfn-body-s3
+          version: "1.0"
+        paths:
+          /items:
+            get:
+              parameters:
+                - name: id
+                  in: query
+                  required: true
+                  schema:
+                    type: string
+              x-amazon-apigateway-integration:
+                type: HTTP_PROXY
+                httpMethod: GET
+                uri: https://example.com/items
+  Apigw009Default:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway009-cfn-default
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009DefaultItems:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref Apigw009Default
+      ParentId: !GetAtt Apigw009Default.RootResourceId
+      PathPart: items
+  Apigw009DefaultGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Apigw009Default
+      ResourceId: !Ref Apigw009DefaultItems
+      HttpMethod: GET
+      AuthorizationType: NONE
+      RequestParameters:
+        method.request.querystring.id: true
+      Integration:
+        Type: HTTP_PROXY
+        IntegrationHttpMethod: GET
+        Uri: https://example.com/items
+  Apigw009ValidatorUnused:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway009-cfn-validator-unused
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009ValidatorUnusedValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      Name: validate-params
+      RestApiId: !Ref Apigw009ValidatorUnused
+      ValidateRequestBody: true
+      ValidateRequestParameters: true
+  Apigw009ValidatorUnusedPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref Apigw009ValidatorUnused
+      ResourceId: !GetAtt Apigw009ValidatorUnused.RootResourceId
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Apigw009ValidatorUnusedFn.Arn}/invocations
+  Apigw009ValidatorUnusedFnRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2cgap-apigateway009-cfn-validator-unused-fn
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009
+  Apigw009ValidatorUnusedFn:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: c2cgap-apigateway009-cfn-validator-unused
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt Apigw009ValidatorUnusedFnRole.Arn
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              return {"statusCode": 200, "body": "ok"}
+      Tags:
+        - Key: Rule
+          Value: APIGateway-009

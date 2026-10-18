@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  XrayExplicit:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway013-xrayexplicit
+      Tags:
+        - Key: Rule
+          Value: APIGateway-013
+  XrayExplicitMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref XrayExplicit
+      ResourceId: !GetAtt XrayExplicit.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  XrayExplicitDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: XrayExplicitMethod
+    Properties:
+      RestApiId: !Ref XrayExplicit
+  XrayExplicitStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref XrayExplicit
+      DeploymentId: !Ref XrayExplicitDeployment
+      StageName: prod
+      TracingEnabled: false
+      Tags:
+        - Key: Rule
+          Value: APIGateway-013
+  XrayDefault:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway013-xraydefault
+      Tags:
+        - Key: Rule
+          Value: APIGateway-013
+  XrayDefaultMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref XrayDefault
+      ResourceId: !GetAtt XrayDefault.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  XrayDefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: XrayDefaultMethod
+    Properties:
+      RestApiId: !Ref XrayDefault
+  XrayDefaultStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: !Ref XrayDefault
+      DeploymentId: !Ref XrayDefaultDeployment
+      StageName: prod
+      Tags:
+        - Key: Rule
+          Value: APIGateway-013
+  XrayDeployStage:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway013-xraydeploystage
+      Tags:
+        - Key: Rule
+          Value: APIGateway-013
+  XrayDeployStageMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref XrayDeployStage
+      ResourceId: !GetAtt XrayDeployStage.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  XrayDeployStageDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: XrayDeployStageMethod
+    Properties:
+      RestApiId: !Ref XrayDeployStage
+      StageName: prod
+  XrayDeployDesc:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: c2cgap-apigateway013-xraydeploydesc
+      Tags:
+        - Key: Rule
+          Value: APIGateway-013
+  XrayDeployDescMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref XrayDeployDesc
+      ResourceId: !GetAtt XrayDeployDesc.RootResourceId
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+  XrayDeployDescDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: XrayDeployDescMethod
+    Properties:
+      RestApiId: !Ref XrayDeployDesc
+      StageName: prod
+      StageDescription:
+        TracingEnabled: false
+        MetricsEnabled: true
+        Tags:
+          - Key: Rule
+            Value: APIGateway-013

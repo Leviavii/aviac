@@ -1,0 +1,8 @@
+[
+  {
+    "name": "app",
+    "image": "nginx:latest",
+    "cpu": 256,
+    "essential": true
+  }
+]

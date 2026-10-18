@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: S3-010 variants
+Parameters:
+  KmsKeyArn:
+    Type: String
+    Default: ""
+Conditions:
+  HasKmsKey: !Not [!Equals [!Ref KmsKeyArn, ""]]
+Resources:
+  ExplicitAes:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3010-explicit-aes-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Rule
+          Value: S3-010
+  DefaultEnc:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3010-default-${AWS::AccountId}
+      Tags:
+        - Key: Rule
+          Value: S3-010
+  KmsNoKey:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3010-kms-no-key-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+            BucketKeyEnabled: true
+      Tags:
+        - Key: Rule
+          Value: S3-010
+  DsseNoKey:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3010-dsse-no-key-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms:dsse
+      Tags:
+        - Key: Rule
+          Value: S3-010
+  CondKey:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub c2cgap-s3010-cond-key-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !If [HasKmsKey, !Ref KmsKeyArn, !Ref AWS::NoValue]
+      Tags:
+        - Key: Rule
+          Value: S3-010

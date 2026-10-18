@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: c2cgap VPC-056 security group egress open to all IP addresses test versions
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-0b6352d73ace64d6b
+Resources:
+  SgInlineV4:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc056-sg-inline-v4
+      GroupDescription: inline egress to 0.0.0.0/0
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Rule
+          Value: VPC-056
+  SgInlineV6:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc056-sg-inline-v6
+      GroupDescription: inline egress to ::/0
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIpv6: ::/0
+      Tags:
+        - Key: Rule
+          Value: VPC-056
+  SgDefault:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc056-sg-default
+      GroupDescription: no SecurityGroupEgress so AWS default allow-all egress stays
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 10.0.0.0/16
+      Tags:
+        - Key: Rule
+          Value: VPC-056
+  SgSeparate:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: c2cgap-vpc056-sg-separate
+      GroupDescription: egress via AWS::EC2::SecurityGroupEgress
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Rule
+          Value: VPC-056
+  SgSeparateEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt SgSeparate.GroupId
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: 0.0.0.0/0
