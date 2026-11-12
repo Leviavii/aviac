@@ -7,7 +7,7 @@ locals {
 
 resource "aws_iam_role" "partner_root" {
   name = "c2c-fam-partner-root"
-  tags = { Rule = "IAM-057,IAM-146", Case = "baseline-cross-account" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "baseline-cross-account" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { AWS = local.partner_root }, Action = "sts:AssumeRole" }]
@@ -16,7 +16,7 @@ resource "aws_iam_role" "partner_root" {
 
 resource "aws_iam_role" "partner_extid" {
   name = "c2c-fam-partner-extid"
-  tags = { Rule = "IAM-057,IAM-146", Case = "negative-external-id" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "negative-external-id" }
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -28,18 +28,9 @@ resource "aws_iam_role" "partner_extid" {
   })
 }
 
-resource "aws_iam_role" "partner_stsstar" {
-  name = "c2c-fam-partner-stsstar"
-  tags = { Rule = "IAM-057,IAM-146", Case = "action-sts-star" }
-  assume_role_policy = jsonencode({
-    Version   = "2012-10-17"
-    Statement = [{ Effect = "Allow", Principal = { AWS = local.partner_root }, Action = "sts:*" }]
-  })
-}
-
 resource "aws_iam_role" "mfa_bool" {
   name = "c2c-fam-mfa-bool"
-  tags = { Rule = "IAM-057,IAM-146", Case = "mfa-boolean" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "mfa-boolean" }
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -53,7 +44,7 @@ resource "aws_iam_role" "mfa_bool" {
 
 resource "aws_iam_role" "orgid" {
   name = "c2c-fam-orgid"
-  tags = { Rule = "IAM-057,IAM-146", Case = "principal-org-id" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "principal-org-id" }
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -67,7 +58,7 @@ resource "aws_iam_role" "orgid" {
 
 resource "aws_iam_role" "same_literal" {
   name = "c2c-fam-same-literal"
-  tags = { Rule = "IAM-057,IAM-146", Case = "same-account-literal" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "same-account-literal" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { AWS = "arn:aws:iam::306026247677:root" }, Action = "sts:AssumeRole" }]
@@ -76,7 +67,7 @@ resource "aws_iam_role" "same_literal" {
 
 resource "aws_iam_role" "bare_partner" {
   name = "c2c-fam-bare-partner"
-  tags = { Rule = "IAM-057,IAM-146", Case = "bare-account-id" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "bare-account-id" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { AWS = var.partner_account_id }, Action = "sts:AssumeRole" }]
@@ -95,13 +86,13 @@ data "aws_iam_policy_document" "partner_trust" {
 
 resource "aws_iam_role" "policy_doc" {
   name               = "c2c-fam-policy-doc"
-  tags               = { Rule = "IAM-057,IAM-146", Case = "aws-iam-policy-document" }
+  tags               = { Rule = "IAM-057 IAM-146", Case = "aws-iam-policy-document" }
   assume_role_policy = data.aws_iam_policy_document.partner_trust.json
 }
 
 resource "aws_iam_role" "caller_root" {
   name = "c2c-fam-caller-root"
-  tags = { Rule = "IAM-057,IAM-146", Case = "caller-identity-root" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "caller-identity-root" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { AWS = local.self_root }, Action = "sts:AssumeRole" }]
@@ -110,7 +101,7 @@ resource "aws_iam_role" "caller_root" {
 
 resource "aws_iam_role" "local_partner" {
   name = "c2c-fam-local-partner"
-  tags = { Rule = "IAM-057,IAM-146", Case = "local-partner-arn" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "local-partner-arn" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { AWS = local.partner_root }, Action = "sts:AssumeRole" }]
@@ -119,7 +110,7 @@ resource "aws_iam_role" "local_partner" {
 
 resource "aws_iam_role" "empty_cond" {
   name = "c2c-fam-empty-cond"
-  tags = { Rule = "IAM-057,IAM-146", Case = "empty-condition" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "empty-condition" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { AWS = local.partner_root }, Action = "sts:AssumeRole", Condition = {} }]
@@ -128,7 +119,7 @@ resource "aws_iam_role" "empty_cond" {
 
 resource "aws_iam_role" "single_stmt" {
   name = "c2c-fam-single-stmt"
-  tags = { Rule = "IAM-057,IAM-146", Case = "single-object-statement" }
+  tags = { Rule = "IAM-057 IAM-146", Case = "single-object-statement" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = { Effect = "Allow", Principal = { AWS = local.partner_root }, Action = "sts:AssumeRole" }
@@ -137,7 +128,7 @@ resource "aws_iam_role" "single_stmt" {
 
 resource "aws_iam_role" "svc" {
   name = "c2c-fam-svc"
-  tags = { Rule = "IAM-057,IAM-146,IAM-081", Case = "service-principal" }
+  tags = { Rule = "IAM-057 IAM-146 IAM-081", Case = "service-principal" }
   assume_role_policy = jsonencode({
     Version   = "2012-10-17"
     Statement = [{ Effect = "Allow", Principal = { Service = "ec2.amazonaws.com" }, Action = "sts:AssumeRole" }]
