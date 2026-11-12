@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-081 assume-any-role policy variants
+Parameters:
+  OrgId:
+    Type: String
+Resources:
+  MpLiteral:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2c-fam-cfn-081-mp-literal
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: "*"
+  MpCond:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: c2c-fam-cfn-081-mp-cond
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: "*"
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
+  SvcRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-081-svc
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: inline-assume-any
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: sts:AssumeRole
+                Resource: "*"
+      Tags:
+        - Key: Rule
+          Value: IAM-081
+  PolLiteral:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2c-fam-cfn-081-pol-literal
+      Roles:
+        - !Ref SvcRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: "*"
+  PolCond:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2c-fam-cfn-081-pol-cond
+      Roles:
+        - !Ref SvcRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRole
+            Resource: "*"
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
+  PolSaml:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: c2c-fam-cfn-081-pol-saml
+      Roles:
+        - !Ref SvcRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithSAML
+            Resource: "*"

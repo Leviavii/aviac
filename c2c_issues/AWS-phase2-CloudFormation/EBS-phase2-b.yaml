@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EBS-001 CMK variants
+Parameters:
+  LabAz:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: us-east-2a
+  RestoreSnapshotId:
+    Type: String
+    Default: ""
+  EnableCostly:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "false"
+Conditions:
+  HasSnapshot: !Not [!Equals [!Ref RestoreSnapshotId, ""]]
+  Costly: !Equals [!Ref EnableCostly, "true"]
+Resources:
+  Key:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: c2c-fam cfn ebs cmk
+      EnableKeyRotation: true
+      PendingWindowInDays: 7
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:root
+            Action: kms:*
+            Resource: "*"
+  VolGetAtt:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: !Ref LabAz
+      Size: 1
+      Encrypted: true
+      KmsKeyId: !GetAtt Key.Arn
+      Tags:
+        - Key: Rule
+          Value: EBS-001
+        - Key: Case
+          Value: negative-cmk-getatt
+  VolOk:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: !Ref LabAz
+      Size: 1
+      Encrypted: true
+      KmsKeyId: !Ref Key
+      Tags:
+        - Key: Rule
+          Value: EBS-001
+        - Key: Case
+          Value: negative-cmk-ref
+  VolInline:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: !Ref LabAz
+      Size: 1
+      Encrypted: true
+      KmsKeyId: !Sub arn:${AWS::Partition}:kms:${AWS::Region}:${AWS::AccountId}:key/${Key}
+      Tags:
+        - Key: Rule
+          Value: EBS-001
+        - Key: Case
+          Value: negative-cmk-sub-arn
+  VolMA:
+    Type: AWS::EC2::Volume
+    Condition: Costly
+    Properties:
+      AvailabilityZone: !Ref LabAz
+      Size: 4
+      VolumeType: io2
+      Iops: 100
+      MultiAttachEnabled: true
+      Encrypted: true
+      Tags:
+        - Key: Rule
+          Value: EBS-001
+        - Key: Case
+          Value: io2-multi-attach-aws-managed
+  Restored:
+    Type: AWS::EC2::Volume
+    Condition: HasSnapshot
+    Properties:
+      AvailabilityZone: !Ref LabAz
+      SnapshotId: !Ref RestoreSnapshotId
+      Tags:
+        - Key: Rule
+          Value: EBS-001
+        - Key: Case
+          Value: restored-from-snapshot-param

@@ -1,0 +1,153 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM-057 IAM-146 trust policy variants
+Parameters:
+  PartnerAccountId:
+    Type: String
+  ExternalIdValue:
+    Type: String
+    NoEcho: true
+  UseExternalId:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "false"
+Conditions:
+  HasExternalId: !Equals [!Ref UseExternalId, "true"]
+Resources:
+  P1Literal:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p1-literal
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P2Partition:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p2-partition
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:${AWS::Partition}:iam::111122223333:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P3StsStar:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p3-stsstar
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: sts:*
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P4CdkSelf:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p4-cdkself
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P5ExtIdParam:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p5-extidparam
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref ExternalIdValue
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P6MfaYamlBool:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p6-mfabool
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: sts:AssumeRole
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: true
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P7IfNoValue:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p7-ifnovalue
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: sts:AssumeRole
+            Condition: !If
+              - HasExternalId
+              - StringEquals:
+                  sts:ExternalId: !Ref ExternalIdValue
+              - !Ref AWS::NoValue
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P9EmptyCond:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p9-emptycond
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: sts:AssumeRole
+            Condition: {}
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
+  P10PartnerNoDef:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: c2c-fam-cfn-p10-partnerparam
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${PartnerAccountId}:root
+            Action: sts:AssumeRole
+      Tags:
+        - Key: Rule
+          Value: IAM-057,IAM-146
