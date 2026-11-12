@@ -22,7 +22,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: arn:aws:iam::111122223333:root
+              AWS: arn:aws:iam::194313865223:root
             Action: sts:AssumeRole
       Tags:
         - Key: Rule
@@ -36,7 +36,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !Sub arn:${AWS::Partition}:iam::111122223333:root
+              AWS: !Sub arn:${AWS::Partition}:iam::194313865223:root
             Action: sts:AssumeRole
       Tags:
         - Key: Rule
@@ -50,7 +50,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: arn:aws:iam::111122223333:root
+              AWS: arn:aws:iam::194313865223:root
             Action: sts:*
       Tags:
         - Key: Rule
@@ -78,7 +78,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: arn:aws:iam::111122223333:root
+              AWS: arn:aws:iam::194313865223:root
             Action: sts:AssumeRole
             Condition:
               StringEquals:
@@ -95,7 +95,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: arn:aws:iam::111122223333:root
+              AWS: arn:aws:iam::194313865223:root
             Action: sts:AssumeRole
             Condition:
               Bool:
@@ -112,7 +112,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: arn:aws:iam::111122223333:root
+              AWS: arn:aws:iam::194313865223:root
             Action: sts:AssumeRole
             Condition: !If
               - HasExternalId
@@ -131,7 +131,7 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: arn:aws:iam::111122223333:root
+              AWS: arn:aws:iam::194313865223:root
             Action: sts:AssumeRole
             Condition: {}
       Tags:

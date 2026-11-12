@@ -6,11 +6,13 @@ variable "aws_region" {
 variable "partner_account_id" {
   description = "A real second AWS account ID used as the cross-account principal"
   type        = string
+  default     = "194313865223"
 }
 
 variable "org_id" {
-  description = "The aws-play AWS Organizations ID (o-xxxxxxxxxx)"
+  description = "The aws-play AWS Organizations ID"
   type        = string
+  default     = "o-4ynr318qmi"
 }
 
 variable "lab_az" {
