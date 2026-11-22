@@ -117,3 +117,23 @@ resource "aws_acm_certificate" "import_wildcard" {
   certificate_body = tls_self_signed_cert.wild.cert_pem
   tags             = { Rule = "Certificate-004", Case = "imported-wildcard-no-dvo" }
 }
+
+# Imported cert: clean CN, wildcard only in dns_names (SAN). Checks whether Certificate-004 cloud fails it.
+resource "tls_private_key" "wild_san" {
+  algorithm = "RSA"
+  rsa_bits  = 2048
+}
+
+resource "tls_self_signed_cert" "wild_san" {
+  private_key_pem       = tls_private_key.wild_san.private_key_pem
+  validity_period_hours = 8760
+  allowed_uses          = ["server_auth"]
+  subject { common_name = "import-san.c2cfam.example.com" }
+  dns_names = ["import-san.c2cfam.example.com", "*.importsan.c2cfam.example.com"]
+}
+
+resource "aws_acm_certificate" "import_wildcard_san" {
+  private_key      = tls_private_key.wild_san.private_key_pem
+  certificate_body = tls_self_signed_cert.wild_san.cert_pem
+  tags             = { Rule = "Certificate-004", Case = "imported-wildcard-in-dns-names-only" }
+}
